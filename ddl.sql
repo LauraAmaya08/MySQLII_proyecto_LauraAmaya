@@ -5,7 +5,7 @@ USE la_huerta_encantadaDB;
 
 CREATE TABLE IF NOT EXISTS categoria (
     id_categoria INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL UNIQUE,
+    nombre VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Funciones desempeñadas por empleados
@@ -18,16 +18,6 @@ CREATE TABLE IF NOT EXISTS funciones (
     FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria) 
 );
 
--- Relación entre empleados y funciones
-
-CREATE TABLE empleado_funciones (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    id_empleado INT NOT NULL,
-    id_funcion INT NOT NULL,
-    fecha DATE NOT NULL,
-    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado),
-    FOREIGN KEY (id_funcion) REFERENCES funciones(id_funcion) 
-);
 
 -- Información de empleados 
 
@@ -42,6 +32,17 @@ CREATE TABLE IF NOT EXISTS empleado (
     estado VARCHAR(15) 
 );
 
+-- Relación entre empleados y funciones
+
+CREATE TABLE empleado_funciones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_empleado INT NOT NULL,
+    id_funcion INT NOT NULL,
+    fecha DATE NOT NULL,
+    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado),
+    FOREIGN KEY (id_funcion) REFERENCES funciones(id_funcion) 
+);
+
 -- Información de capacitaciones para empleados 
 
 CREATE TABLE IF NOT EXISTS capacitaciones (
@@ -54,6 +55,7 @@ CREATE TABLE IF NOT EXISTS capacitaciones (
 -- Relación entre empleados y capacitaciones
 
 CREATE TABLE IF NOT EXISTS empleado_capacitaciones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_empleado INT NOT NULL,
     id_capacitacion INT NOT NULL,
     FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado),
@@ -65,13 +67,14 @@ CREATE TABLE IF NOT EXISTS empleado_capacitaciones (
 CREATE TABLE IF NOT EXISTS horarios (
     id_horario INT AUTO_INCREMENT PRIMARY KEY,
     hora_inicio VARCHAR(5) NOT NULL UNIQUE,
-    hora_fin VARCHAR(5) NOT NULL UNIQUE,
+    hora_fin VARCHAR(5) NOT NULL UNIQUE
 );
 
 
 -- Relacion empleados con su horario de trabajo
 
 CREATE TABLE IF NOT EXISTS empleado_horarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_empleado INT NOT NULL,
     id_horario INT NOT NULL,
     FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado),
@@ -82,7 +85,7 @@ CREATE TABLE IF NOT EXISTS empleado_horarios (
 -- Ciudades
 CREATE TABLE IF NOT EXISTS ciudad (
     id_ciudad INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(150) NOT NULL UNIQUE,
+    nombre VARCHAR(150) NOT NULL UNIQUE
 );
 
 
@@ -91,7 +94,7 @@ CREATE TABLE IF NOT EXISTS ciudad (
 CREATE TABLE IF NOT EXISTS tipo_cliente (
     id_tipo INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL UNIQUE,
-    descuento DECIMAL(10,2) NOT NULL UNIQUE,
+    descuento DECIMAL(10,2) NOT NULL UNIQUE
 );
 
 -- Información clientes
@@ -113,7 +116,7 @@ CREATE TABLE IF NOT EXISTS cliente (
 
 CREATE TABLE IF NOT EXISTS proveedor (
     id_proveedor INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL
+    nombre VARCHAR(255) NOT NULL,
     direccion VARCHAR(150),
     telefono VARCHAR(13) UNIQUE NOT NULL,
     id_ciudad INT NOT NULL,
@@ -159,14 +162,24 @@ CREATE TABLE IF NOT EXISTS insumos_orden (
 CREATE TABLE IF NOT EXISTS tipo_producto (
     id_tipo INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL UNIQUE,
-    descripcion TEXT,
+    descripcion TEXT
+);
+
+
+-- Información de lotes de cultivo
+
+CREATE TABLE IF NOT EXISTS cultivo (
+    id_cultivo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    estado ENUM('Excelente','Regular','Malo') NOT NULL,
+    cantidad INT NOT NULL
 );
 
 -- Información productos
 
 CREATE TABLE IF NOT EXISTS producto (
     id_producto INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(255) NOT NULL,
+    nombre VARCHAR(255) NOT NULL UNIQUE,
     descripcion TEXT,
     precio_unitario INT NOT NULL,
     peso DECIMAL(10,2) NOT NULL,
@@ -176,8 +189,8 @@ CREATE TABLE IF NOT EXISTS producto (
     stock INT NOT NULL,
     fecha_vencimiento DATE NOT NULL,
     estado ENUM('Excelente','Regular','Malo') NOT NULL,
-    FOREIGN KEY (id_ciudad) REFERENCES ciudad(id_ciudad),
-    FOREIGN KEY (id_tipo) REFERENCES tipo_producto(id_tipo),
+    FOREIGN KEY (id_cultivo) REFERENCES cultivo(id_cultivo),
+    FOREIGN KEY (id_tipo) REFERENCES tipo_producto(id_tipo)
 );
 
 -- Insumos necesarios es productos
@@ -190,14 +203,6 @@ CREATE TABLE IF NOT EXISTS insumos_producto(
     es_Escencial BOOLEAN NOT NULL
 );
 
--- Información de lotes de cultivo
-
-CREATE TABLE IF NOT EXISTS cultivo (
-    id_cultivo INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    estado ENUM('Excelente','Regular','Malo') NOT NULL,
-    cantidad INT NOT NULL
-);
 
 -- Información de terreno de siembra
 
@@ -211,6 +216,7 @@ CREATE TABLE IF NOT EXISTS terreno (
 -- Relación entre la siembra y el terreno
 
 CREATE TABLE IF NOT EXISTS cultivos_terreno(
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_cultivo INT NOT NULL,
     id_terreno INT NOT NULL,
     FOREIGN KEY (id_cultivo) REFERENCES cultivo(id_cultivo),
@@ -231,6 +237,7 @@ CREATE TABLE IF NOT EXISTS tecnologias (
 -- Relación entre terrenos y tecnologias 
 
 CREATE TABLE IF NOT EXISTS tecnologias_terreno (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_tecnologia INT NOT NULL,
     id_terreno INT NOT NULL,
     FOREIGN KEY (id_tecnologia) REFERENCES tecnologias(id_tecnologia),
@@ -250,6 +257,7 @@ CREATE TABLE IF NOT EXISTS mantenimiento (
 -- Relacion entre los mantenimientos y tecnologias 
 
 CREATE TABLE IF NOT EXISTS mantenimiento_tecnologia (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_tecnologia INT NOT NULL,
     id_mantenimiento INT NOT NULL,
     FOREIGN KEY (id_tecnologia) REFERENCES tecnologias(id_tecnologia),
@@ -269,6 +277,7 @@ CREATE TABLE habitat (
 -- Relación entre habitats y tecnologias 
 
 CREATE TABLE IF NOT EXISTS habitats_terreno (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_tecnologia INT NOT NULL,
     id_habitat INT NOT NULL,
     FOREIGN KEY (id_tecnologia) REFERENCES tecnologias(id_tecnologia),
@@ -291,15 +300,6 @@ CREATE TABLE especie (
     nombre VARCHAR(100) NOT NULL UNIQUE
 );
 
-
--- Usos de un animal
-CREATE TABLE IF NOT EXISTS usos_animal (
-    id_uso INT NOT NULL,
-    id_animal INT NOT NULL,
-    FOREIGN KEY (id_uso) REFERENCES uso_animal(id_uso),
-    FOREIGN KEY (id_animal) REFERENCES animal(id_animal)
-);
-
 -- Registro de animales
 CREATE TABLE animal (
     id_animal INT AUTO_INCREMENT PRIMARY KEY,
@@ -313,8 +313,19 @@ CREATE TABLE animal (
     FOREIGN KEY (id_uso) REFERENCES uso_animal(id_uso)
 );
 
+-- Usos de un animal
+CREATE TABLE IF NOT EXISTS usos_animal (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_uso INT NOT NULL,
+    id_animal INT NOT NULL,
+    FOREIGN KEY (id_uso) REFERENCES uso_animal(id_uso),
+    FOREIGN KEY (id_animal) REFERENCES animal(id_animal)
+);
+
+
 -- Animales en un habitat
 CREATE TABLE IF NOT EXISTS animales_habitat (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_animal INT NOT NULL,
     id_habitat INT NOT NULL,
     fecha DATE NOT NULL,
@@ -330,7 +341,7 @@ CREATE TABLE IF NOT EXISTS animales_habitat (
 CREATE TABLE IF NOT EXISTS venta (
     id_venta INT AUTO_INCREMENT PRIMARY KEY,
     id_empleado INT NOT NULL,
-    fecha INT NOT NULL,
+    fecha DATE NOT NULL,
     total DECIMAL (10,2) NOT NULL
     FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado)
 );
@@ -338,6 +349,7 @@ CREATE TABLE IF NOT EXISTS venta (
 -- Detalles de la venta (productos)
 
 CREATE TABLE IF NOT EXISTS productos_venta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_venta INT NOT NULL,
     id_producto INT NOT NULL,
     cantidad INT NOT NULL,
@@ -348,6 +360,7 @@ CREATE TABLE IF NOT EXISTS productos_venta (
 -- Relación de clientes y sus compras
 
 CREATE TABLE IF NOT EXISTS cliente_venta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_venta INT NOT NULL,
     id_cliente INT NOT NULL,
     FOREIGN KEY (id_venta) REFERENCES venta(id_venta),
@@ -358,11 +371,12 @@ CREATE TABLE IF NOT EXISTS cliente_venta (
 -- Registros de entrega 
 
 CREATE TABLE IF NOT EXISTS entrega_venta (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_entrega INT AUTO_INCREMENT PRIMARY KEY,
     id_venta INT NOT NULL,
     fecha DATE NOT NULL,
     anotacion TEXT,
-    FOREIGN KEY (id_venta) REFERENCES cliente_venta(id_venta),
+    FOREIGN KEY (id_venta) REFERENCES cliente_venta(id_venta)
 );
 
 
@@ -384,4 +398,18 @@ CREATE TABLE IF NOT EXISTS auditoria (
     id_auditoria INT AUTO_INCREMENT PRIMARY KEY,
     mensaje TEXT,
     fecha DATE NOT NULL
+);
+
+
+-- Relación empleados - animales
+
+CREATE TABLE IF NOT EXISTS animales_tratados (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_animal INT NOT NULL,
+    id_empleado INT NOT NULL,
+    fecha DATE NOT NULL,
+    descripcion TEXT NOT NULL,
+    valor_tratamiento DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (id_animal) REFERENCES animal(id_animal),
+    FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado)
 );
