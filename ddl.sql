@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS empleado_capacitaciones (
 
 CREATE TABLE IF NOT EXISTS horarios (
     id_horario INT AUTO_INCREMENT PRIMARY KEY,
-    hora_inicio VARCHAR(5) NOT NULL UNIQUE,
-    hora_fin VARCHAR(5) NOT NULL UNIQUE
+    hora_inicio VARCHAR(5) NOT NULL,
+    hora_fin VARCHAR(5) NOT NULL
 );
 
 
@@ -276,7 +276,7 @@ CREATE TABLE habitat (
 
 -- Relación entre habitats y tecnologias 
 
-CREATE TABLE IF NOT EXISTS habitats_terreno (
+CREATE TABLE IF NOT EXISTS habitats_tecnologias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_tecnologia INT NOT NULL,
     id_habitat INT NOT NULL,
@@ -287,21 +287,21 @@ CREATE TABLE IF NOT EXISTS habitats_terreno (
 
 -- Registro de usos de animales 
 
-CREATE TABLE uso_animal (
-    id_uso INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS uso_animal (
+    id_uso INT AUTO_INCREMENT PRIMARY KEY,
     descripcion VARCHAR(100) NOT NULL UNIQUE,
     produccion VARCHAR(100)
 );
 
 -- Registro de especies 
 
-CREATE TABLE especie (
-    id_especie INT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS especie (
+    id_especie INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL UNIQUE
 );
 
 -- Registro de animales
-CREATE TABLE animal (
+CREATE TABLE IF NOT EXISTS animal (
     id_animal INT AUTO_INCREMENT PRIMARY KEY,
     id_especie INT NOT NULL,
     id_uso INT NOT NULL,
@@ -309,8 +309,7 @@ CREATE TABLE animal (
     altura DECIMAL(10, 2),
     valor_unitario DECIMAL(10, 2) NOT NULL,
     estado ENUM('Excelente','Regular','Malo') NOT NULL,
-    FOREIGN KEY (id_especie) REFERENCES especie(id_especie),
-    FOREIGN KEY (id_uso) REFERENCES uso_animal(id_uso)
+    FOREIGN KEY (id_especie) REFERENCES especie(id_especie)
 );
 
 -- Usos de un animal
