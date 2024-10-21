@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS producto (
     id_producto INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL UNIQUE,
     descripcion TEXT,
-    precio_unitario INT NOT NULL,
+    precio_unitario DECIMAL (10,2) NOT NULL,
     peso DECIMAL(10,2) NOT NULL,
     es_Cultivo BOOLEAN NOT NULL,
     id_cultivo INT,
