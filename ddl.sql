@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS empleado_horarios (
     id_empleado INT NOT NULL,
     id_horario INT NOT NULL,
     FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado),
-    FOREIGN KEY (id_horario) REFERENCES horarios(id_horario)
+    FOREIGN KEY (id_horario) REFERENCES horarios(id_horario),
     dias_semana INT NOT NULL 
 );
 
@@ -153,7 +153,7 @@ CREATE TABLE IF NOT EXISTS insumos_orden (
     id_insumo INT NOT NULL,
     id_orden INT NOT NULL,
     FOREIGN KEY (id_insumo) REFERENCES insumos(id_insumo),
-    FOREIGN KEY (id_orden) REFERENCES orden(id_orden)
+    FOREIGN KEY (id_orden) REFERENCES orden(id_orden),
     cantidad INT NOT NULL 
 );
 
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS insumos_producto(
     id_insumo INT NOT NULL,
     id_producto INT NOT NULL,
     FOREIGN KEY (id_insumo) REFERENCES insumos(id_insumo),
-    FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
+    FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
     es_Escencial BOOLEAN NOT NULL
 );
 
@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS cultivos_terreno(
     id_cultivo INT NOT NULL,
     id_terreno INT NOT NULL,
     FOREIGN KEY (id_cultivo) REFERENCES cultivo(id_cultivo),
-    FOREIGN KEY (id_terreno) REFERENCES terreno(id_terreno)
+    FOREIGN KEY (id_terreno) REFERENCES terreno(id_terreno),
     fecha_siembra DATE NOT NULL,
     fecha_recoger DATE NOT NULL
 );
@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS venta (
     id_venta INT AUTO_INCREMENT PRIMARY KEY,
     id_empleado INT NOT NULL,
     fecha DATE NOT NULL,
-    total DECIMAL (10,2) NOT NULL
+    total DECIMAL (10,2) NOT NULL,
     FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado)
 );
 
@@ -371,7 +371,6 @@ CREATE TABLE IF NOT EXISTS cliente_venta (
 -- Registros de entrega 
 
 CREATE TABLE IF NOT EXISTS entrega_venta (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     id_entrega INT AUTO_INCREMENT PRIMARY KEY,
     id_venta INT NOT NULL,
     fecha DATE NOT NULL,
