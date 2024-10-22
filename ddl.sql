@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS orden (
     id_proveedor INT NOT NULL,
     total DECIMAL(10, 2),
     fecha DATE NOT NULL,
-    estado ENUM('Entregado','Pendiente','Cancelada','En proceso') NOT NULL,
+    estado ENUM('Entregado','Pendiente','Cancelado','En proceso') NOT NULL,
     FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor)
 );
 
@@ -304,7 +304,6 @@ CREATE TABLE IF NOT EXISTS especie (
 CREATE TABLE IF NOT EXISTS animal (
     id_animal INT AUTO_INCREMENT PRIMARY KEY,
     id_especie INT NOT NULL,
-    id_uso INT NOT NULL,
     peso DECIMAL(10, 2),
     altura DECIMAL(10, 2),
     valor_unitario DECIMAL(10, 2) NOT NULL,
@@ -328,7 +327,6 @@ CREATE TABLE IF NOT EXISTS animales_habitat (
     id_animal INT NOT NULL,
     id_habitat INT NOT NULL,
     fecha DATE NOT NULL,
-    cantidad INT NOT NULL,
     FOREIGN KEY (id_animal) REFERENCES animal(id_animal),
     FOREIGN KEY (id_habitat) REFERENCES habitat(id_habitat)
 );
