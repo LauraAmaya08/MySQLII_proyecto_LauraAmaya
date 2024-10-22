@@ -73,7 +73,16 @@ BEGIN
 END//
 DELIMITER ;
 
--- 9. Modificar el estado de una entrega.
+-- 9. Modificar el estado del pedido de un cliente.
+
+DELIMITER //
+CREATE PROCEDURE modificar_estado(IN id_e INT, IN nuevo_estado VARCHAR(50))
+BEGIN
+    UPDATE cliente_venta
+    SET estado = nuevo_estado
+    WHERE id = id_e;
+END//
+DELIMITER ;
 
 -- 10. Asignar una tecnología a un terreno.
 

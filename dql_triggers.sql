@@ -35,7 +35,22 @@ DELIMITER ;
 
 -- 4. Notificar a un empleado al ser asignado a una nueva función. 
 
--- 5. Registrar cada vez que se entrega un producto. 
+-- 5. Registrar cada vez que se entrega un pedido. 
+
+DELIMITER //
+CREATE TRIGGER alerta_entrega_pedido
+AFTER UPDATE ON cliente_venta
+FOR EACH ROW
+BEGIN
+    IF new.estado = 'Entregado' THEN
+    INSERT INTO alertas(mensaje,fecha) 
+    VALUES (concat('Pedido Entregado! ID: ', old.id_venta, ' Cliente: ', old.id_cliente), NOW());
+    INSERT INTO entrega_venta (id_venta, fecha, anotacion) VALUES
+    (old.id_venta, now(), 'Pedido entregado correctamente');
+    END IF;
+END//
+DELIMITER ;
+
 
 -- 6. Actualizar el historial de capacitaciones al inscribirse un empleado. 
 
