@@ -43,6 +43,30 @@ DELIMITER ;
 
 -- 4. Determinar si un cultivo es rentable.
 
+CREATE FUNCTION es_cultivo_rentable(id_producto_e INT)
+RETURNS VARCHAR(15)
+DETERMINISTIC
+BEGIN
+    DECLARE ingresos DECIMAL(10,2) DEFAULT 0;
+    DECLARE resultado VARCHAR(15);
+    
+    SELECT SUM(p.precio_unitario* pv.cantidad)
+    INTO ingresos
+    FROM productos_venta pv 
+    JOIN producto p
+    ON p.id_producto = pv.id_producto
+    WHERE pv.id_producto = id_producto_e;
+
+    IF ingresos > 1000.00 THEN
+        SET resultado = 'Rentable';
+    ELSE
+        SET resultado = 'No Rentable';
+    END IF;
+
+    RETURN resultado;
+END//
+DELIMITER ;
+
 
 -- 5. Obtener funciones por categoría especifica.
 
@@ -89,6 +113,20 @@ DELIMITER ;
 
 -- 8. Calcular el total de productos vendidos por un empleado específico.
 
+DELIMITER //
+CREATE FUNCTION total_productos_empleado(id_empleado_e INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total_vendidos INT DEFAULT 0;
+    SELECT SUM(pv.cantidad)
+    INTO total_vendidos
+    FROM venta v
+    JOIN productos_venta pv ON v.id_venta = pv.id_venta
+    WHERE v.id_empleado = id_empleado_e;
+    RETURN total_vendidos;
+END//
+DELIMITER ;
 
 
 -- 9. Obtener el promedio de peso de los animales en un hábitat.
@@ -216,6 +254,31 @@ DELIMITER ;
 
 -- 17. Calcular el porcentaje de clientes que compraron productos en estado excelente.
 
+DELIMITER //
+CREATE FUNCTION porcentaje_clientes_estado_excelente()
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    DECLARE total_clientes INT DEFAULT 0;
+    DECLARE estado_excelente INT DEFAULT 0;
+    DECLARE porcentaje DECIMAL(5,2) DEFAULT 0;
+
+
+    SELECT COUNT(DISTINCT cv.id_cliente)
+    INTO total_clientes
+    FROM cliente_venta cv;
+
+    SELECT COUNT(DISTINCT cv.id_cliente)
+    INTO estado_excelente
+    FROM cliente_venta cv
+    JOIN productos_venta pv ON pv.id_venta = cv.id_venta
+    JOIN producto p ON p.id_producto = pv.id_producto
+    WHERE p.estado = 'Excelente';
+	SET porcentaje = (estado_excelente / total_clientes) * 100;
+    
+    RETURN porcentaje;
+END//
+DELIMITER ;
 
 -- 18. Calcular promedio de animales por habitat.
 
