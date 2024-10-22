@@ -43,6 +43,7 @@ DELIMITER ;
 
 -- 4. Determinar si un cultivo es rentable.
 
+DELIMITER //
 CREATE FUNCTION es_cultivo_rentable(id_producto_e INT)
 RETURNS VARCHAR(15)
 DETERMINISTIC

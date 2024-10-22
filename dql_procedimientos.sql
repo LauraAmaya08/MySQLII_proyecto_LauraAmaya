@@ -39,7 +39,7 @@ DELIMITER ;
 DELIMITER //
 
 CREATE PROCEDURE desactivar_empleado (IN IDempleado INT)
- BEGIN
+BEGIN
     UPDATE empleado
     SET estado = 'Inactivo'
     WHERE id_empleado = IDempleado;
@@ -58,6 +58,8 @@ END//
 DELIMITER ;
 
 -- 6. Actualizar los horarios de un empleado.
+
+
 
 -- 7. Registrar un nuevo cliente.
 
@@ -86,6 +88,8 @@ DELIMITER ;
 
 -- 10. Asignar una tecnología a un terreno.
 
+
+
 -- 11. Buscar entregas por estado.
 
 DELIMITER //
@@ -102,6 +106,15 @@ DELIMITER ;
 
 -- 14. Cambiar la ciudad de un proveedor.
 
--- 15. Eliminar un empleado.
+-- 15. Eliminar relaciones de una tecnología.
+
+DELIMITER //
+CREATE PROCEDURE borrar_relaciones_tecnologias(IN IDtecnologia INT)
+BEGIN
+    DELETE FROM tecnologias_terreno tt WHERE tt.id_tecnologia = IDtecnologia;
+    DELETE FROM habitats_tecnologias ht WHERE ht.id_tecnologia = IDtecnologia;
+    DELETE FROM mantenimiento_tecnologia mt WHERE mt.id_tecnologia = IDtecnologia;
+END//
+DELIMITER ;
 
 -- 16. Registrar un uso de animal.
