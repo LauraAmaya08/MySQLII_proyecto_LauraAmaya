@@ -30,7 +30,9 @@ SELECT * FROM terreno WHERE estado = 'Ocupado';
 --     8. Listar todos los proveedores que suministran insumos esenciales.
 
 
+
 --     9. Mostrar todas las tecnologías usadas en los cultivos.
+
 
 
 --     10. Listar todas las capacitaciones realizadas en los últimos 4 meses.
@@ -40,11 +42,14 @@ SELECT * FROM capacitaciones WHERE fecha_realizacion > now() - INTERVAL 4 MONTH;
 --     11. Listar los cultivos que se deben recoger el mes siguiente 
 
 
+
 -- 2. Consultas con JOIN
 
 --      11. Obtener todas las ventas junto con los productos vendidos.
 
 --      12. Mostrar los animales junto con las especies a las que pertenecen.
+
+SELECT a.id_animal as ID, peso, altura, valor_unitario as precio, estado, e.nombre as especie FROM animal a JOIN especie e ON e.id_especie = a.id_especie;
 
 --      13. Listar los clientes y sus compras realizadas.
 

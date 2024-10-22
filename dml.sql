@@ -1,5 +1,4 @@
 -- Categorias funciones
-
 INSERT INTO categoria (nombre) VALUES
 ('Mantenimiento'),
 ('Administración'),
@@ -14,7 +13,6 @@ INSERT INTO categoria (nombre) VALUES
 ('Producción');
 
 -- Funciones 
-
 INSERT INTO funciones (nombre, descripcion, id_categoria) VALUES
 ('Supervisión de maquinaria', 'Encargado de supervisar el correcto funcionamiento de la maquinaria.', 1),
 ('Control de inventarios', 'Responsable de controlar el inventario de insumos y productos.', 3),
@@ -63,7 +61,6 @@ INSERT INTO funciones (nombre, descripcion, id_categoria) VALUES
 
 
 -- Empleados
-
 INSERT INTO empleado (nombre, telefono, direccion, email, fecha_contratacion, salario, estado) VALUES
 ('Carlos Perez', '3001234567', 'Calle 1 #45-67', 'carlos@correo.com', '2024-01-15', 2000000, 'En Receso'),
 ('Maria Lopez', '3019876543', 'Carrera 10 #20-30', 'maria@correo.com', '2019-07-12', 1800000, 'Activo'),
@@ -152,7 +149,6 @@ INSERT INTO empleado (nombre, telefono, direccion, email, fecha_contratacion, sa
 
 
 -- Ciudades
-
 INSERT INTO ciudad (nombre) VALUES
 ('Bogotá'),
 ('Medellín'),
@@ -166,7 +162,6 @@ INSERT INTO ciudad (nombre) VALUES
 ('Ibagué');
 
 -- Tipo de cliente
-
 INSERT INTO tipo_cliente (nombre, descuento) VALUES
 ('Regular', 0.00),
 ('VIP', 10.00),
@@ -175,7 +170,6 @@ INSERT INTO tipo_cliente (nombre, descuento) VALUES
 ('Mayorista', 20.00);
 
 -- Cliente
- 
 INSERT INTO cliente (nombre, telefono, direccion, email, id_ciudad, id_tipo) VALUES
 ('Luis Fernández', '3201234567', 'Calle 123 #45-67', 'luisf@correo.com', 1, 2),
 ('Ana Torres', '3109876543', 'Carrera 50 #12-34', 'anato@correo.com', 2, 3),
@@ -239,7 +233,6 @@ INSERT INTO cliente (nombre, telefono, direccion, email, id_ciudad, id_tipo) VAL
 
 
 -- Proveedor 
-
 INSERT INTO proveedor (nombre, direccion, telefono, id_ciudad, estado) VALUES
 ('AgroSuministros', 'Calle 12 #34-56', '3001122334', 1, 'Activo'),
 ('Cultivos del Sur', 'Carrera 7 #65-70', '3102233445', 2, 'Favorito'),
@@ -288,7 +281,6 @@ INSERT INTO proveedor (nombre, direccion, telefono, id_ciudad, estado) VALUES
 ('AgroInsumos', 'Avenida 35 #90-80', '3110123479', 5, 'Activo');
 
 -- Cultivo
-
 INSERT INTO cultivo (nombre, estado, cantidad) VALUES
 ('Tomates', 'Excelente', 100),
 ('Lechugas', 'Regular', 80),
@@ -350,7 +342,6 @@ INSERT INTO cultivo (nombre, estado, cantidad) VALUES
 
 
 -- Tipos de productos
-
 INSERT INTO tipo_producto (nombre, descripcion) VALUES
 ('Vegetales', 'Productos vegetales.'),
 ('Frutas', 'Frutos obtenidos de árboles'),
@@ -362,7 +353,6 @@ INSERT INTO tipo_producto (nombre, descripcion) VALUES
 ('Producto', 'Hecho con materia nuestra');
 
 -- Insumos 
-
 INSERT INTO insumos (nombre, descripcion, stock, Precio_unitario, stock_minimo) VALUES
 ('Fertilizante orgánico', 'Fertilizante natural.', 500, 10000, 150),
 ('Semillas de tomate', 'Semillas para cultivar tomates.', 300, 15000, 130),
@@ -454,7 +444,6 @@ INSERT INTO insumos (nombre, descripcion, stock, Precio_unitario, stock_minimo) 
 
 
 -- Productos
-
 INSERT INTO producto (nombre, descripcion, precio_unitario, peso, es_Cultivo, id_cultivo, id_tipo, stock, fecha_vencimiento, estado) VALUES
 ('Tomate Orgánico', 'Tomate de cultivo orgánico.', 1.50, 0.2, TRUE, 1, 1, 2000, '2025-12-31', 'Excelente'),
 ('Pepino Fresco', 'Pepino de cultivo fresco.', 1.20, 0.3, TRUE, 8, 1, 1500, '2025-11-30', 'Excelente'),
@@ -1893,12 +1882,12 @@ INSERT INTO venta (id_empleado, fecha, total) VALUES
 (3, '2024-01-22', 1600.00),
 (7, '2024-01-23', 1400.00),
 (12, '2024-01-24', 1850.00),
-(26, '2024-01-25', 2100.00),
-(44, '2024-01-26', 1950.00),
-(77, '2024-01-27', 2300.00),
-(18, '2024-01-28', 1650.00),
-(3, '2024-01-29', 1700.00),
-(7, '2024-01-30', 1750.00),
+(26, '2024-01-25', 2060.00),
+(44, '2024-01-26', 1119.00),
+(77, '2024-01-27', 840.00),
+(18, '2024-01-28', 1260.00),
+(3, '2024-01-29', 555.00),
+(7, '2024-01-30', 283.00),
 (12, '2024-02-01', 1800.00),
 (26, '2024-02-02', 1900.00),
 (44, '2024-02-03', 2100.00),
@@ -1951,7 +1940,186 @@ INSERT INTO venta (id_empleado, fecha, total) VALUES
 
 -- Insertar registros en la tabla productos_venta
 INSERT INTO productos_venta (id_venta, id_producto, cantidad) VALUES
-(1, 1, 10);
+(1, 1, 300),
+(1, 2, 200),
+(1, 3, 345),
+(1, 4, 200),
+(1, 5, 200),
+(2, 6, 100),
+(2, 7, 340),
+(2, 8, 400),
+(2, 9, 400),
+(2, 10, 200),
+(3, 11, 334),
+(3, 12, 100),
+(3, 13, 50),
+(3, 14, 50),
+(3, 15, 100),
+(4, 16, 200),
+(4, 17, 200),
+(4, 18, 200),
+(4, 19, 300),
+(4, 20, 200),
+(5, 21, 300),
+(5, 22, 350),
+(5, 23, 500),
+(5, 24, 403),
+(5, 25, 300),
+(6, 26, 300),
+(6, 27, 250),
+(6, 28, 430),
+(6, 29, 350),
+(6, 30, 250),
+(7, 31, 137),
+(7, 32, 100),
+(7, 33, 100),
+(7, 34, 100),
+(7, 35, 100),
+(8, 36, 150),
+(8, 37, 120),
+(8, 38, 100),
+(8, 39, 100),
+(8, 40, 100),
+(9, 41, 50),
+(9, 42, 30),
+(9, 43, 40),
+(9, 44, 30)
+(9, 45, 30),
+(10, 46, 83),
+(10, 47, 50),
+(10, 48, 100),
+(10, 49, 101),
+(10, 50, 100),
+(11, 51, 60),
+(11, 52, 120),
+(11, 53, 100),
+(11, 54, 100),
+(11, 55, 150),
+(12, 56, 150),
+(12, 57, 100),
+(12, 58, 150),
+(12, 59, 130),
+(12, 60, 180),
+(13, 61, 100),
+(13, 62, 100),
+(13, 63, 100),
+(13, 64, 100),
+(13, 65, 100),
+(14, 66, 840),
+(15, 67, 150),
+(15, 68, 50),
+(16, 69, 38),
+(16, 70, 100),
+(16, 71, 250),
+(17, 72, 600),
+(17, 73, 750),
+(18, 74, 1000),
+(18, 75, 1250),
+(19, 76, 700),
+(20, 77, 233),
+(21, 78, 1000),
+(21, 79, 1300),
+(22, 80, 833),
+(22, 81, 500),
+(22, 82, 500),
+(23, 83, 800),
+(24, 84, 833),
+(24, 85, 1000),
+(25, 86, 167), 
+(26, 87, 600),
+(27, 88, 600), 
+(28, 89, 800),
+(29, 90, 1000),
+(30, 91, 700),
+(30, 92, 200),
+(31, 92, 38),
+(31, 92, 100),
+(31, 92, 250),
+(31, 1, 600),
+(31, 2, 750),
+(32, 3, 1000),
+(32, 4, 1250),
+(33, 5, 700),
+(34, 6, 233),
+(35, 7, 1000),
+(36, 8, 1300),
+(37, 9, 833),
+(38, 10, 500),
+(38, 11, 500),
+(39, 12, 800),
+(39, 13, 833),
+(39, 14, 1000),
+(40, 15, 167), 
+(40, 16, 600),
+(41, 17, 600), 
+(41, 18, 800),
+(41, 19, 1000),
+(42, 20, 700),
+(42, 21, 200),
+(42, 22, 250),
+(43, 23, 600),
+(43, 24, 750),
+(43, 25, 1000),
+(44, 26, 1250),
+(44, 27, 700),
+(44, 28, 233),
+(44, 29, 1000),
+(44, 30, 1300),
+(45, 31, 833),
+(45, 32, 500),
+(45, 33, 500),
+(46, 34, 800),
+(47, 35, 833),
+(47, 36, 1000),
+(48, 37, 167), 
+(49, 38, 600),
+(50, 39, 600), 
+(51, 40, 800),
+(52, 41, 1000),
+(52, 42, 700),
+(53, 43, 200),
+(53, 44, 100),
+(53, 45, 100),
+(54, 46, 150),
+(54, 47, 150),
+(54, 48, 100),
+(54, 49, 150),
+(55, 50, 130),
+(55, 51, 180),
+(55, 52, 100),
+(56, 53, 100),
+(56, 54, 100),
+(57, 55, 100),
+(57, 56, 100),
+(57, 57, 840),
+(57, 58, 150),
+(58, 59, 50),
+(58, 60, 38),
+(58, 61, 100),
+(58, 62, 250),
+(59, 63, 600),
+(59, 64, 750),
+(59, 65, 1000),
+(59, 66, 1250),
+(60, 67, 700),
+(60, 68, 233),
+(60, 69, 1000),
+(60, 70, 1300),
+(61, 71, 833),
+(61, 72, 500),
+(61, 73, 500),
+(62, 74, 800),
+(62, 75, 833),
+(62, 76, 1000),
+(63, 77, 167), 
+(63, 78, 600),
+(63, 79, 600), 
+(64, 80, 800),
+(64, 81, 1000),
+(64, 82, 700),
+(64, 83, 200),
+(64, 84, 38),
+(64, 85, 100),
 
 -- Pedidos de clientes 
 INSERT INTO cliente_venta (id_venta, id_cliente, estado) VALUES

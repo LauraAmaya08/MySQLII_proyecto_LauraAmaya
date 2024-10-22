@@ -1,28 +1,93 @@
 -- Procedimientos Almacenados
 
--- 1. Registrar una nueva venta (incluir detalles).
+-- 1. Listar funciones de un empleado.
+
+DELIMITER //
+CREATE PROCEDURE funciones_empleado(IN IDempleado INT)
+BEGIN
+    SELECT e.nombre,f.nombre as funcion
+    FROM empleado_funciones ef
+    JOIN funciones f ON f.id_funcion = ef.id_funcion
+    join empleado e ON e.id_empleado = ef.id_empleado
+    where e.id_empleado = IDempleado;
+END//
+DELIMITER ;
 
 -- 2. Actualizar el estado de un producto.
 
+DELIMITER //
+CREATE PROCEDURE actualizar_estado_producto (IN IDproducto INT, IN estadoProducto VARCHAR(50))
+BEGIN
+    UPDATE producto
+    SET estado = estadoProducto
+    WHERE id_producto = IDproducto;
+END//
+DELIMITER ;
+
 -- 3. Registrar una capacitación para un empleado.
 
--- 4. Eliminar un producto.
+DELIMITER //
+CREATE PROCEDURE registrar_capacitacion (IN IDcapacitacion INT, IN IDempleado INT)
+BEGIN
+    INSERT INTO empleado_capacitaciones(id_empleado, id_capacitacion)VALUES
+    (IDempleado,IDcapacitacion);
+END//
+DELIMITER ;
 
--- 5. Registrar un nuevo proveedor.
+-- 4. Desactivar un empleado
+
+DELIMITER //
+
+CREATE PROCEDURE desactivar_empleado (IN IDempleado INT)
+ BEGIN
+    UPDATE empleado
+    SET estado = 'Inactivo'
+    WHERE id_empleado = IDempleado;
+ END //
+
+DELIMITER ;
+
+-- 5. Eliminar mantenimiento
+
+DELIMITER //
+CREATE PROCEDURE eliminar_mantenimiento(IN IDmantenimiento INT)
+BEGIN
+    DELETE FROM mantenimiento_tecnologia WHERE id_mantenimiento = IDmantenimiento;
+    DELETE FROM mantenimiento WHERE id_mantenimiento = IDmantenimiento;
+END//
+DELIMITER ;
 
 -- 6. Actualizar los horarios de un empleado.
 
 -- 7. Registrar un nuevo cliente.
 
+
+
 -- 8. Agregar un nuevo insumo.
+
+DELIMITER //
+CREATE PROCEDURE agregar_insumo (IN nombre_E VARCHAR(200), IN descripcion_E  TEXT, IN stock_E  INT , IN Precio_unitario_E  DECIMAL(10,2), IN stock_minimo_E INT)
+BEGIN
+    INSERT INTO insumos (nombre, descripcion, stock, Precio_unitario, stock_minimo) VALUES
+    (nombre_E, descripcion_E, stock_E, Precio_unitario_E, stock_minimo_E );
+END//
+DELIMITER ;
 
 -- 9. Modificar el estado de una entrega.
 
 -- 10. Asignar una tecnología a un terreno.
 
--- 11. Registrar un mantenimiento.
+-- 11. Buscar entregas por estado.
 
--- 12. Actualizar el estado de un animal.
+DELIMITER //
+CREATE PROCEDURE estado_entregas(IN estadoBuscar VARCHAR(50))
+BEGIN
+    SELECT * FROM cliente_venta cv
+    where cv.estado = estadoBuscar;
+END//
+DELIMITER ;
+
+-- 12. Registrar un el estado de un animal.
 
 -- 13. Registrar un nuevo habitat.
 

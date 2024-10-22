@@ -1,10 +1,37 @@
 -- Triggers
 
--- 1. Registrar cambios de estado en insumos. 
+-- 1. Registrar compras de insumos. 
+
+DELIMITER //
+CREATE TRIGGER registrar_compra_insumo
+AFTER INSERT ON insumos_orden
+FOR EACH ROW
+BEGIN
+    INSERT INTO compras (fecha ,total) 
+    VALUES (concat('Compra insumo! ID:', new.id_insumo), NOW(), new.cantidad);
+    UPDATE insumos 
+    SET stock = stock + new.cantidad
+    WHERE id_insumo = new.id_insumo;
+END//
+DELIMITER ;
+
 
 -- 2. Actualizar stock de productos tras una venta. 
 
--- 3. Enviar alerta cuando un animal se enferma. 
+-- 3. Enviar alerta cuando se despide un empleado.
+
+CREATE TRIGGER alerta_despido_empleado
+AFTER UPDATE ON empleado
+FOR EACH ROW
+BEGIN
+    IF new.estado = 'Inactivo' THEN
+    INSERT INTO alertas (mensaje,fecha) 
+    VALUES (concat('Empleado despedido! ID: ', old.id_empleado), NOW());
+    END IF;
+END//
+DELIMITER ;
+
+
 
 -- 4. Notificar a un empleado al ser asignado a una nueva función. 
 
