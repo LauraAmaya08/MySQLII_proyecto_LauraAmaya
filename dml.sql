@@ -1983,7 +1983,7 @@ INSERT INTO productos_venta (id_venta, id_producto, cantidad) VALUES
 (9, 41, 50),
 (9, 42, 30),
 (9, 43, 40),
-(9, 44, 30)
+(9, 44, 30),
 (9, 45, 30),
 (10, 46, 83),
 (10, 47, 50),
@@ -2119,7 +2119,7 @@ INSERT INTO productos_venta (id_venta, id_producto, cantidad) VALUES
 (64, 82, 700),
 (64, 83, 200),
 (64, 84, 38),
-(64, 85, 100),
+(64, 85, 100);
 
 -- Pedidos de clientes 
 INSERT INTO cliente_venta (id_venta, id_cliente, estado) VALUES

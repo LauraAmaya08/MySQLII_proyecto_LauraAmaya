@@ -386,7 +386,7 @@ CREATE TABLE IF NOT EXISTS alertas (
 
 CREATE TABLE IF NOT EXISTS compras (
     id_compra INT AUTO_INCREMENT PRIMARY KEY,
-    descripcion TEXT
+    descripcion TEXT,
     fecha DATE NOT NULL,
     total DECIMAL(10, 2) NOT NULL
 );
