@@ -66,8 +66,8 @@ CREATE TABLE IF NOT EXISTS empleado_capacitaciones (
 
 CREATE TABLE IF NOT EXISTS horarios (
     id_horario INT AUTO_INCREMENT PRIMARY KEY,
-    hora_inicio VARCHAR(5) NOT NULL,
-    hora_fin VARCHAR(5) NOT NULL
+    hora_inicio TIME NOT NULL,
+    hora_fin TIME NOT NULL
 );
 
 
