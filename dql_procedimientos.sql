@@ -57,15 +57,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- 6. Actualizar los horarios de un empleado.
-
-
-
--- 7. Registrar un nuevo cliente.
-
-
-
--- 8. Agregar un nuevo insumo.
+-- 6. Agregar un nuevo insumo.
 
 DELIMITER //
 CREATE PROCEDURE agregar_insumo (IN nombre_E VARCHAR(200), IN descripcion_E  TEXT, IN stock_E  INT , IN Precio_unitario_E  DECIMAL(10,2), IN stock_minimo_E INT)
@@ -75,7 +67,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- 9. Modificar el estado del pedido de un cliente.
+-- 7. Modificar el estado del pedido de un cliente.
 
 DELIMITER //
 CREATE PROCEDURE modificar_estado(IN id_e INT, IN nuevo_estado VARCHAR(50))
@@ -86,11 +78,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- 10. Asignar una tecnología a un terreno.
-
-
-
--- 11. Buscar entregas por estado.
+-- 8. Buscar entregas por estado.
 
 DELIMITER //
 CREATE PROCEDURE estado_entregas(IN estadoBuscar VARCHAR(50))
@@ -100,13 +88,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- 12. Registrar un el estado de un animal.
-
--- 13. Registrar un nuevo habitat.
-
--- 14. Cambiar la ciudad de un proveedor.
-
--- 15. Eliminar relaciones de una tecnología.
+-- 9. Eliminar relaciones de una tecnología.
 
 DELIMITER //
 CREATE PROCEDURE borrar_relaciones_tecnologias(IN IDtecnologia INT)
@@ -117,4 +99,85 @@ BEGIN
 END//
 DELIMITER ;
 
--- 16. Registrar un uso de animal.
+
+-- 10. Obtener las funciones de un empleado.
+DELIMITER //
+CREATE PROCEDURE listar_capacitaciones_empleado(IN IDempleado INT)
+BEGIN
+    SELECT *
+    FROM empleado_capacitaciones ec
+    JOIN capacitaciones c ON c.id_capacitacion = ec.id_capacitacion
+    WHERE ec.id_empleado = IDempleado;
+END//
+DELIMITER ;
+
+-- 11. Obtener el estado de un producto específico.
+DELIMITER //
+CREATE PROCEDURE estado_producto(IN IDproducto INT, OUT estado_e VARCHAR(50))
+BEGIN
+    SELECT estado INTO estado_e
+    FROM producto
+    WHERE id_producto = IDproducto;
+END//
+DELIMITER ;
+
+
+-- 12. Obtener total de ventas por un producto.
+DELIMITER //
+CREATE PROCEDURE total_ventas_producto(IN IDproducto INT, OUT total_ventas INT)
+BEGIN
+    SELECT SUM(pv.cantidad) INTO total_ventas
+    FROM productos_venta pv
+    WHERE pv.id_producto = IDproducto;
+END//
+DELIMITER ;
+
+
+-- 13. Listar los mantenimientos de una tecnología.
+DELIMITER //
+CREATE PROCEDURE historial_mantenimiento(IN IDtecnologia INT)
+BEGIN
+    SELECT * FROM mantenimiento_tecnologia WHERE id_tecnologia = IDtecnologia;
+END//
+DELIMITER ;
+
+-- 14. Obtener la cantidad de empleados que desempeñan una función.
+
+DELIMITER //
+CREATE PROCEDURE cantidad_empleados_funcion(IN IDfuncion INT, OUT cantidad INT)
+BEGIN
+    SELECT COUNT(id_empleado) INTO cantidad FROM empleado_funciones WHERE id_funcion = IDfuncion;
+END//
+DELIMITER ;
+
+-- 15. Actualizar el precio de un producto.
+
+DELIMITER //
+CREATE PROCEDURE actualizar_precio_producto(IN IDproducto INT, IN nuevo_precio DECIMAL(10,2))
+BEGIN
+    UPDATE producto 
+    SET precio_unitario = nuevo_precio 
+    WHERE id_producto = IDproducto;
+END//
+DELIMITER ;
+
+-- 16. Listar animales por habitat
+
+DELIMITER //
+CREATE PROCEDURE listar_animales_habitat(IN IDhabitat INT)
+BEGIN
+    SELECT * FROM animales_habitat WHERE id_habitat = IDhabitat;
+END//
+DELIMITER ;
+
+
+-- 17. Registrar un animal y devolver su ID
+
+DELIMITER //
+CREATE PROCEDURE registrar_animal_y_devolver_id(IN id_especie_E INT, IN peso_E DECIMAL(10,2),IN altura_E, DECIMAL(10,2),  IN estado_E VARCHAR(50), OUT nuevo_id INT)  valor_unitario_E, estado_E) 
+BEGIN
+    INSERT INTO animal (id_especie_E, peso_E, altura_E, valor_unitario_E, estado_E) 
+    VALUES (id_especie_E, peso_E, altura_E, valor_unitario_E, estado_E);
+    SET nuevo_id = LAST_INSERT_ID();
+END//
+DELIMITER ;

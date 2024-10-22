@@ -112,7 +112,7 @@ BEGIN
     DECLARE dias_restantes INT;
     SET dias_restantes = DATEDIFF(NEW.fecha_vencimiento, CURDATE());
     IF dias_restantes <= 30 AND dias_restantes >= 0 THEN
-      INSERT INTO alertas (mensaje,fecha) 
+    INSERT INTO alertas (mensaje,fecha) 
     VALUES (concat('El producto ', NEW.nombre, ' está a punto de vencer en ', dias_restantes, ' días'), NOW());
     END IF;
 END//
@@ -184,3 +184,4 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
+
