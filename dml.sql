@@ -55,8 +55,10 @@ INSERT INTO funciones (nombre, descripcion, id_categoria) VALUES
 ('Evaluación de variedades de cultivos', 'Investigar y evaluar diferentes variedades de cultivos para seleccionar las más adecuadas.', 11),
 ('Planificación de rotación de cultivos', 'Desarrollar planes de rotación de cultivos para mejorar la salud del suelo.', 11),
 ('Gestión de fertilización', 'Planificar y supervisar la aplicación de fertilizantes en cultivos.', 11),
-('Investigación en agroecología', 'Realizar investigaciones para promover prácticas agrícolas sostenibles y respetuosas con el medio ambiente.', 11);
+('Investigación en agroecología', 'Realizar investigaciones para promover prácticas agrícolas sostenibles y respetuosas con el medio ambiente.', 11),
 ('Ventas de Productos', 'Responsable de comercializar productos frescos de la finca a los clientes, asegurando la calidad y satisfacción.', 5),
+('Veterinario', 'Responsable de la salud y bienestar de los animales, realizando consultas, diagnósticos y tratamientos médicos.', 11); 
+
 
 
 
@@ -232,24 +234,7 @@ INSERT INTO cliente (nombre, telefono, direccion, email, id_ciudad, id_tipo) VAL
 ('Juliana Martínez', '3090123457', 'Carrera 80 #11-22', 'julianam@correo.com', 5, 5),
 ('Mauricio Álvarez', '3101234568', 'Calle 110 #23-45', 'mauricioa@correo.com', 6, 2),
 ('Laura Espinosa', '3112345679', 'Avenida 190 #12-34', 'laurae@correo.com', 7, 3),
-('Diana Ortega', '3123456780', 'Carrera 230 #67-89', 'dianao@correo.com', 8, 1),
-('Fernando Gómez', '3134567891', 'Calle 250 #45-67', 'fernandog@correo.com', 9, 4),
-('Nicolás Castro', '3145678902', 'Avenida 270 #34-56', 'nicolasc@correo.com', 10, 5),
-('Sofía Cardona', '3156789013', 'Calle 290 #12-34', 'sofiac@correo.com', 1, 2),
-('Valentina Mendoza', '3167890124', 'Carrera 310 #67-89', 'valentinam@correo.com', 2, 3),
-('Cristian Peña', '3178901235', 'Avenida 330 #90-12', 'cristianp@correo.com', 3, 1),
-('Alejandro Salazar', '3189012346', 'Calle 350 #11-22', 'alejandros@correo.com', 4, 4),
-('Gabriela López', '3190123457', 'Carrera 370 #45-67', 'gabrielal@correo.com', 5, 5),
-('Diego Rivera', '3211234568', 'Avenida 390 #34-56', 'diegor@correo.com', 6, 2),
-('Diana Muñoz', '3212345679', 'Calle 410 #12-34', 'dianam@correo.com', 7, 3),
-('Juan David Castro', '3223456780', 'Carrera 430 #67-89', 'juand@correo.com', 8, 1),
-('Monica López', '3234567891', 'Avenida 450 #45-67', 'monical@correo.com', 9, 4),
-('Rafael Hernández', '3235678902', 'Calle 470 #90-12', 'rafaelh@correo.com', 10, 5),
-('Luisa Fernanda', '3256889013', 'Carrera 490 #11-34', 'luisaf@correo.com', 1, 2),
-('Felipe Morales', '3267890224', 'Avenida 510 #67-89', 'felipem@correo.com', 2, 3),
-('Ana María Ruiz', '3278911235', 'Calle 530 #23-45', 'anam@correo.com', 3, 1),
-('Carlos Alberto Pérez', '3289042346', 'Carrera 550 #12-34', 'carlosa@correo.com', 4, 4),
-('Juan Pablo Gutiérrez', '3290123557', 'Avenida 570 #45-67', 'juanpablog@correo.com', 5, 5);
+('Diana Ortega', '3123456780', 'Carrera 230 #67-89', 'dianao@correo.com', 8, 1);
 
 
 
@@ -900,7 +885,7 @@ INSERT INTO empleado_funciones (id_empleado, id_funcion, fecha) VALUES
 (5, 3, '2022-03-20'),
 (6, 9, '2020-02-02'),
 (7, 41, '2019-10-12'),
-(8, 2, '2018-11-16'),
+(8, 42, '2018-11-16'),
 (9, 8, '2024-07-07'),
 (10, 6, '2022-04-21'),
 (11, 7, '2019-08-26'),
@@ -916,7 +901,7 @@ INSERT INTO empleado_funciones (id_empleado, id_funcion, fecha) VALUES
 (21, 6, '2023-11-05'),
 (22, 8, '2024-01-01'),
 (23, 7, '2023-09-05'),
-(24, 2, '2024-08-18'),
+(24, 42, '2024-08-18'),
 (25, 3, '2024-01-15'),
 (26, 41, '2024-08-01'),
 (27, 8, '2023-07-22'),
@@ -937,7 +922,7 @@ INSERT INTO empleado_funciones (id_empleado, id_funcion, fecha) VALUES
 (42, 2, '2024-12-01'),
 (43, 7, '2023-04-05'),
 (44, 41, '2022-08-15'),
-(45, 4, '2023-03-03'),
+(45, 42, '2023-03-03'),
 (46, 5, '2024-06-25'),
 (47, 40, '2023-08-10'),
 (48, 39, '2024-02-01'),
@@ -969,7 +954,7 @@ INSERT INTO empleado_funciones (id_empleado, id_funcion, fecha) VALUES
 (75, 23, '2022-03-20'),
 (76, 9, '2023-02-02'),
 (77, 31, '2019-10-12'),
-(78, 32, '2024-11-16'),
+(78, 42, '2024-11-16'),
 (79, 8, '2023-07-07'),
 (80, 33, '2022-03-20'),
 (81, 29, '2022-02-02'),
@@ -1317,8 +1302,63 @@ INSERT INTO insumos_producto (id_insumo, id_producto, es_Escencial) VALUES
 (20, 20, FALSE);
 
 -- Insertar registros en la tabla cultivos_terreno
-INSERT INTO cultivos_terreno (id_cultivo, id_terreno, fecha_siembra, fecha_recoger) VALUES
-(1, 1, '2024-01-15', '2024-06-15');
+(1, 1, '2024-01-15', '2024-06-15'),
+(2, 2, '2024-02-01', '2024-07-01'),
+(3, 3, '2024-02-10', '2024-07-10'),
+(4, 4, '2024-03-01', '2024-08-01'),
+(5, 5, '2024-03-05', '2024-08-05'),
+(6, 6, '2024-03-10', '2024-08-10'),
+(7, 7, '2024-04-01', '2024-09-01'),
+(8, 8, '2024-04-10', '2024-09-10'),
+(9, 9, '2024-04-15', '2024-09-15'),
+(10, 10, '2024-05-01', '2024-10-01'),
+(11, 11, '2024-05-05', '2024-10-05'),
+(12, 12, '2024-05-10', '2024-10-10'),
+(13, 13, '2024-06-01', '2024-11-01'),
+(14, 14, '2024-06-05', '2024-11-05'),
+(15, 15, '2024-06-10', '2024-11-10'),
+(16, 16, '2024-07-01', '2024-12-01'),
+(17, 17, '2024-07-05', '2024-12-05'),
+(18, 18, '2024-07-10', '2024-12-10'),
+(19, 19, '2024-08-01', '2025-01-01'),
+(20, 20, '2024-08-05', '2025-01-05'),
+(21, 21, '2024-08-10', '2025-01-10'),
+(22, 22, '2024-09-01', '2025-02-01'),
+(23, 23, '2024-09-05', '2025-02-05'),
+(24, 24, '2024-09-10', '2025-02-10'),
+(25, 25, '2024-10-01', '2025-03-01'),
+(26, 26, '2024-10-05', '2025-03-05'),
+(27, 27, '2024-10-10', '2025-03-10'),
+(28, 28, '2024-11-01', '2025-04-01'),
+(29, 29, '2024-11-05', '2025-04-05'),
+(30, 30, '2024-11-10', '2025-04-10'),
+(31, 31, '2024-12-01', '2025-05-01'),
+(32, 32, '2024-12-05', '2025-05-05'),
+(33, 33, '2024-12-10', '2025-05-10'),
+(34, 34, '2024-12-15', '2025-05-15'),
+(35, 35, '2024-12-20', '2025-05-20'),
+(36, 36, '2024-12-25', '2025-05-25'),
+(37, 37, '2024-12-30', '2025-05-30'),
+(38, 38, '2024-12-31', '2025-06-01'),
+(39, 1, '2024-01-05', '2024-06-05'),
+(40, 2, '2024-01-06', '2024-06-06'),
+(41, 3, '2024-01-07', '2024-06-07'),
+(42, 4, '2024-01-08', '2024-06-08'),
+(43, 5, '2024-01-09', '2024-06-09'),
+(44, 6, '2024-01-10', '2024-06-10'),
+(45, 7, '2024-01-11', '2024-06-11'),
+(46, 8, '2024-01-12', '2024-06-12'),
+(47, 9, '2024-01-13', '2024-06-13'),
+(48, 10, '2024-01-14', '2024-06-14'),
+(49, 11, '2024-01-15', '2024-06-15'),
+(50, 12, '2024-01-16', '2024-06-16'),
+(51, 13, '2024-01-17', '2024-06-17'),
+(52, 14, '2024-01-18', '2024-06-18'),
+(53, 15, '2024-01-19', '2024-06-19'),
+(54, 16, '2024-01-20', '2024-06-20'),
+(55, 17, '2024-01-21', '2024-06-21'),
+(56, 18, '2024-01-22', '2024-06-22'),
+(57, 19, '2024-01-23', '2024-06-23');
 
 
 -- Insertar registros en la tabla tecnologias_terreno
@@ -1326,9 +1366,34 @@ INSERT INTO tecnologias_terreno (id_tecnologia, id_terreno, fecha) VALUES
 (1, 1, '2024-01-20');
 
 
--- Insertar registros en la tabla mantenimiento_tecnologia
+-- mantenimientos de tecnologias 
 INSERT INTO mantenimiento_tecnologia (id_tecnologia, id_mantenimiento, fecha_realizacion) VALUES
-(1, 1, '2024-01-22');
+(1, 1, '2024-01-22'),
+(2, 2, '2024-01-25'),
+(3, 3, '2024-01-30'),
+(4, 4, '2024-02-05'),
+(5, 5, '2024-02-10'),
+(6, 6, '2024-02-15'),
+(7, 7, '2024-02-20'),
+(8, 8, '2024-02-25'),
+(9, 9, '2024-03-01'),
+(10, 10, '2024-03-05'),
+(11, 11, '2024-03-10'),
+(12, 12, '2024-03-15'),
+(13, 13, '2024-03-20'),
+(14, 14, '2024-03-25'),
+(15, 15, '2024-04-01'),
+(16, 16, '2024-04-05'),
+(17, 17, '2024-04-10'),
+(18, 18, '2024-04-15'),
+(19, 19, '2024-04-20'),
+(20, 20, '2024-04-25'),
+(21, 21, '2024-05-01'),
+(22, 22, '2024-05-05'),
+(23, 23, '2024-05-10'),
+(24, 24, '2024-05-15'),
+(25, 25, '2024-05-20');
+
 
 
 -- Habitats
@@ -1543,15 +1608,120 @@ INSERT INTO venta (id_empleado, fecha, total) VALUES
 INSERT INTO productos_venta (id_venta, id_producto, cantidad) VALUES
 (1, 1, 10);
 
--- Insertar registros en la tabla cliente_venta
-INSERT INTO cliente_venta (id_venta, id_cliente, estado) VALUES
-(1, 1, 'Entregado');
+-- Pedidos de clientes 
 
--- Insertar registros en la tabla entrega_venta
+INSERT INTO cliente_venta (id_venta, id_cliente, estado) VALUES
+(1, 1, 'Entregado'),
+(2, 2, 'Pendiente'),
+(3, 3, 'Cancelada'),
+(4, 4, 'En proceso'),
+(5, 5, 'Entregado'),
+(6, 6, 'Pendiente'),
+(7, 7, 'Cancelada'),
+(8, 8, 'En proceso'),
+(9, 9, 'Entregado'),
+(10, 10, 'Pendiente'),
+(11, 11, 'Cancelada'),
+(12, 12, 'En proceso'),
+(13, 13, 'Entregado'),
+(14, 14, 'Pendiente'),
+(15, 15, 'Cancelada'),
+(16, 16, 'En proceso'),
+(17, 17, 'Entregado'),
+(18, 18, 'Pendiente'),
+(19, 19, 'Cancelada'),
+(20, 20, 'En proceso'),
+(21, 21, 'Entregado'),
+(22, 22, 'Pendiente'),
+(23, 23, 'Cancelada'),
+(24, 24, 'En proceso'),
+(25, 25, 'Entregado'),
+(26, 26, 'Pendiente'),
+(27, 27, 'Cancelada'),
+(28, 28, 'En proceso'),
+(29, 29, 'Entregado'),
+(30, 30, 'Pendiente'),
+(31, 31, 'Cancelada'),
+(32, 32, 'En proceso'),
+(33, 33, 'Entregado'),
+(34, 34, 'Pendiente'),
+(35, 35, 'Cancelada'),
+(36, 36, 'En proceso'),
+(37, 37, 'Entregado'),
+(38, 38, 'Pendiente'),
+(39, 39, 'Cancelada'),
+(40, 40, 'En proceso'),
+(41, 41, 'Entregado'),
+(42, 42, 'Pendiente'),
+(43, 43, 'Cancelada'),
+(44, 44, 'En proceso'),
+(45, 45, 'Entregado'),
+(46, 46, 'Pendiente'),
+(47, 47, 'Cancelada'),
+(48, 48, 'En proceso'),
+(49, 49, 'Entregado'),
+(50, 50, 'Pendiente'),
+(51, 51, 'Cancelada'),
+(52, 52, 'En proceso'),
+(53, 53, 'Entregado'),
+(54, 54, 'Pendiente'),
+(55, 55, 'Cancelada'),
+(56, 56, 'En proceso'),
+(57, 57, 'Entregado'),
+(58, 58, 'Pendiente'),
+(59, 1, 'Cancelada'),
+(61, 1, 'En proceso'),
+(62, 3, 'Entregado'),
+(63, 8, 'Pendiente'),
+(64, 13, 'Cancelada');
+
+
+-- Entregas de ventas
+
 INSERT INTO entrega_venta (id_venta, fecha, anotacion) VALUES
-(1, '2024-02-02', 'Entrega realizada exitosamente.');
+(1, '2024-02-03', 'Entrega realizada exitosamente.'), 
+(5, '2024-01-20', 'Entrega realizada exitosamente.'),  
+(9, '2024-01-24', 'Entrega realizada exitosamente.'),
+(13, '2024-01-28', 'Entrega realizada exitosamente.'),  
+(17, '2024-04-01', 'Entrega realizada exitosamente.'),  
+(21, '2024-02-08', 'Entrega realizada exitosamente.'),  
+(25, '2024-02-12', 'Entrega realizada exitosamente.'),  
+(29, '2024-02-14', 'Entrega realizada exitosamente.'),  
+(33, '2024-02-18', 'Entrega realizada exitosamente.'),  
+(37, '2024-02-23', 'Entrega realizada exitosamente.'), 
+(41, '2024-02-28', 'Entrega realizada exitosamente.'),  
+(45, '2024-03-01', 'Entrega realizada exitosamente.'),  
+(49, '2024-03-06', 'Entrega realizada exitosamente.'),  
+(53, '2024-03-11', 'Entrega realizada exitosamente.'), 
+(57, '2024-03-12', 'Entrega realizada exitosamente.'),
+(62, '2024-07-12', 'Entrega realizada exitosamente.');
 
 
 -- Insertar registros en la tabla animales_tratados
 INSERT INTO animales_tratados (id_animal, id_empleado, fecha, descripcion, valor_tratamiento) VALUES
-(1, 1, '2024-02-06', 'Tratamiento para parásitos.', 200.00);
+(1, 8, '2024-02-01', 'Consulta general y vacunación', 100.00),
+(2, 24, '2024-02-03', 'Desparasitacion y revisión dental', 75.00),
+(33, 45, '2024-02-05', 'Tratamiento para infección de oído', 150.00),
+(4, 78, '2024-02-10', 'Chequeo anual y análisis de sangre', 200.00),
+(5, 8, '2024-02-12', 'Vacuna contra la rabia', 50.00),
+(46, 24, '2024-02-15', 'Control de pulgas y garrapatas', 65.00),
+(35, 45, '2024-02-20', 'Cirugía menor por fractura', 300.00),
+(8, 78, '2024-02-25', 'Consulta por alergias', 120.00),
+(36, 8, '2024-03-01', 'Vacunación y revisión de peso', 80.00),
+(17, 24, '2024-03-05', 'Desparasitacion interna', 70.00),
+(11, 45, '2024-03-10', 'Tratamiento de dermatitis', 180.00),
+(12, 78, '2024-03-12', 'Consulta por problemas de comportamiento', 90.00),
+(13, 8, '2024-03-15', 'Chequeo de salud general', 110.00),
+(14, 24, '2024-03-20', 'Vacuna contra moquillo', 60.00),
+(15, 45, '2024-03-25', 'Tratamiento para enfermedades respiratorias', 140.00),
+(55, 78, '2024-03-28', 'Revisión post-operatoria', 75.00),
+(47, 8, '2024-04-02', 'Consulta de salud y vacunación', 130.00),
+(18, 24, '2024-04-05', 'Control de peso y nutrición', 85.00),
+(32, 45, '2024-04-10', 'Consulta de urgencia por vómitos', 160.00),
+(20, 78, '2024-04-15', 'Chequeo dental y limpieza', 200.00),
+(21, 8, '2024-04-20', 'Vacunación contra leptospirosis', 50.00),
+(39, 24, '2024-04-22', 'Desparasitacion y control de pulgas', 75.00),
+(23, 45, '2024-04-25', 'Tratamiento para infección de piel', 145.00),
+(24, 78, '2024-04-28', 'Consulta por fiebre y malestar', 125.00),
+(25, 8, '2024-04-30', 'Vacunación y control de salud', 100.00);
+

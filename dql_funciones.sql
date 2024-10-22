@@ -38,15 +38,28 @@ END//
 DELIMITER ;
 
 
--- 7. Obtener el número de empleados por función.
+-- 7. Obtener el número de empleados por una función.
+
+DELIMITER //
+CREATE FUNCTION total_empleados(ID_Entregada INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+DECLARE cantidad INT DEFAULT 0;
+SELECT  count(id_empleado) INTO cantidad FROM empleado_funciones
+WHERE id_funcion = ID_Entregada;
+RETURN cantidad;
+END//
+DELIMITER ;
 
 -- 8. Calcular el total de productos vendidos por un empleado específico.
+
 
 -- 9. Obtener el promedio de peso de los animales en un hábitat.
 
 -- 10. Calcular el total de insumos necesarios para un cultivo específico.
 
--- 11. Obtener el valor total de ventas en un rango de fechas.
+-- 11. Obtener el total de ventas en un rango de fechas.
 
 -- 12. Calcular el tiempo promedio de entrega de las ventas.
 

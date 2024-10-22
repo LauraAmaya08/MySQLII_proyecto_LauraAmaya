@@ -1,5 +1,7 @@
 -- 1. Consultas con SELECT
---     1. Mostrar todos los empleados que tienen el cargo de 'Veterinario'.
+--     1. Mostrar todos las funciones que están relacionadas a producción.
+
+SELECT * FROM funciones WHERE id_categoria = 11;
 
 --     2. Listar todos los clientes que viven en una ciudad específica.
 
@@ -19,7 +21,7 @@ SELECT * FROM producto WHERE WHERE MONTH(fecha_vencimiento) = MONTH(now()) AND Y
 
 --     6. Listar todas las ventas realizadas en una fecha específica.
 
-
+SELECT * FROM venta v WHERE v.fecha = '2024-01-16';
 
 --     7. Mostrar todos los terrenos que están ocupados.
 
