@@ -697,19 +697,32 @@ BEGIN
 END//
 DELIMITER ;
 ```
-### 20. Calcular el total de insumos usados en un año.
+### 20. Obtener el estado promedio de los animales.
 
 ```sql
 DELIMITER //
-CREATE FUNCTION insumos_anio(anio INT)
-RETURNS INT 
+CREATE FUNCTION estado_promedio_animales()
+RETURNS VARCHAR(50)
 DETERMINISTIC
 BEGIN
-    DECLARE total_insumos INT DEFAULT 0;
-    SELECT count(i.id_insumo) INTO total_insumos 
-    FROM insumos i 
-    WHERE YEAR(i.fecha_registro) = anio;
-    RETURN total_insumos;
+    DECLARE exc_count INT DEFAULT 0;
+    DECLARE reg_count INT DEFAULT 0;
+    DECLARE mal_count INT DEFAULT 0;
+    DECLARE estado_promedio VARCHAR(10);
+	SELECT 
+        COUNT(CASE WHEN estado = 'Excelente' THEN 1 END),
+        COUNT(CASE WHEN estado = 'Regular' THEN 1 END),
+        COUNT(CASE WHEN estado = 'Malo' THEN 1 END)
+	INTO exc_count, reg_count, mal_count
+    FROM animal;
+    IF exc_count >= reg_count AND exc_count >= mal_count THEN
+        SET estado_promedio = 'Excelente';
+    ELSEIF reg_count >= exc_count AND reg_count >= mal_count THEN
+        SET estado_promedio = 'Regular';
+    ELSE
+        SET estado_promedio = 'Malo';
+    END IF;
+    RETURN estado_promedio;
 END//
 DELIMITER ;
 ```
