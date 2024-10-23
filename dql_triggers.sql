@@ -38,7 +38,7 @@ AFTER UPDATE ON empleado
 FOR EACH ROW
 BEGIN
     IF new.estado = 'Inactivo' THEN
-    INSERT INTO alertas (mensaje,fecha) 
+    INSERT INTO auditoria (mensaje,fecha) 
     VALUES (concat('Empleado despedido! ID: ', old.id_empleado), NOW());
     END IF;
 END//
@@ -52,7 +52,7 @@ AFTER UPDATE ON empleado_funciones
 FOR EACH ROW
 BEGIN
     IF new.id_funcion <> old.id_funcion THEN
-    INSERT INTO alertas (mensaje,fecha) 
+    INSERT INTO auditoria (mensaje,fecha) 
     VALUES (concat('Funciones de empleado ', old.id_empleado, ' actualizadas! Nueva función: ',new.id_funcion), NOW());
     END IF;
 END//
@@ -96,7 +96,7 @@ AFTER UPDATE ON horarios
 FOR EACH ROW
 BEGIN
     IF new.hora_inicio <> old.hora_inicio OR new.hora_fin <> old.hora_fin THEN
-    INSERT INTO alertas (mensaje,fecha) 
+    INSERT INTO auditoria (mensaje,fecha) 
     VALUES (concat('Atención empleados! si tu horario es ', old.hora_inicio, ' - ' ,old.hora_fin, ' tu horario se actualizó a ', new.hora_inicio, ' - ' ,new.hora_fin), NOW());
     END IF;
 END//
@@ -185,3 +185,100 @@ BEGIN
 END//
 DELIMITER ;
 
+
+
+-- 14. Notificar animales enfermos
+
+DELIMITER //
+CREATE TRIGGER alerta_enfermos
+AFTER UPDATE ON animal
+FOR EACH ROW
+BEGIN
+    IF NEW.estado = 'Malo' THEN
+        INSERT INTO alertas(mensaje, fecha) 
+        VALUES (CONCAT('Atención el animal: ', NEW.id_animal, ' está enfermo!'), NOW());
+    END IF;
+END//
+DELIMITER ;
+
+-- 15. Asignar automaticamente el estado de un producto desde su cultivo 
+
+DELIMITER //
+CREATE TRIGGER estado_producto
+BEFORE INSERT ON producto
+FOR EACH ROW
+BEGIN
+	DECLARE estado_cul VARCHAR(100);
+    IF NEW.es_Cultivo = 1 THEN
+    SELECT cul.estado INTO estado_cul FROM cultivo cul WHERE cul.id_cultivo = NEW.id_cultivo;
+    SET NEW.estado = estado_cul;
+    END IF;
+END//
+DELIMITER ;
+
+-- 16. Notificar la alerta de cantidad de insumos  
+
+DELIMITER //
+CREATE TRIGGER alerta_falta_insumos
+AFTER UPDATE ON insumos
+FOR EACH ROW
+BEGIN
+    IF NEW.stock <= NEW.stock_minimo THEN
+        INSERT INTO alertas(mensaje, fecha) 
+        VALUES (CONCAT('Atención, recarga en: ', NEW.nombre, '. Stock actual: ', NEW.stock), NOW());
+    END IF;
+END//
+DELIMITER ;
+
+-- 17. Registrar venta por empleado
+
+DELIMITER //
+CREATE TRIGGER control_ventas_empleado
+AFTER INSERT ON venta
+FOR EACH ROW
+BEGIN
+	INSERT INTO alertas(mensaje, fecha) 
+	VALUES (CONCAT('Venta realizada!, Encargado: ', NEW.id_empleado, '. Total: ', NEW.total), NOW());
+END//
+DELIMITER ;
+
+-- 18. Asignar fecha a venta 
+
+DELIMITER //
+CREATE TRIGGER fecha_venta
+BEFORE INSERT ON venta
+FOR EACH ROW
+BEGIN
+    SET NEW.fecha = now();
+END//
+DELIMITER ;
+
+
+-- 19. Registro de Tecnologías Usadas
+
+DELIMITER //
+CREATE TRIGGER registro_tecnologias_usadas
+AFTER UPDATE ON tecnologias
+FOR EACH ROW
+BEGIN
+		DECLARE nombre VARCHAR(200);
+		IF NEW.es_Usado = 1 THEN 
+        SELECT t.nombre INTO nombre FROM tecnologias t where t.id_tecnologia = NEW.id_tecnologia;
+		INSERT INTO auditoria (mensaje, fecha) VALUES (CONCAT(' Tecnología en uso: ', nombre), NOW());
+        END IF;
+END//
+DELIMITER ;
+
+
+-- 20. Actualización de Estado de Proveedor
+
+DELIMITER //
+CREATE TRIGGER actualizar_estado_proveedor
+BEFORE UPDATE ON proveedor
+FOR EACH ROW
+BEGIN
+    IF (SELECT COUNT(*) FROM orden WHERE id_proveedor = NEW.id_proveedor BETWEEN now() AND now() - INTERVAL 6 MONTH) = 0 THEN
+        SET NEW.estado = 'Inactivo';
+    END IF;
+END//
+DELIMITER ;

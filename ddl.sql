@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS producto (
     id_tipo INT NOT NULL,
     stock INT NOT NULL,
     fecha_vencimiento DATE NOT NULL,
-    estado ENUM('Excelente','Regular','Malo') NOT NULL,
+    estado ENUM('Excelente','Regular','Malo'),
     FOREIGN KEY (id_cultivo) REFERENCES cultivo(id_cultivo),
     FOREIGN KEY (id_tipo) REFERENCES tipo_producto(id_tipo)
 );
@@ -338,7 +338,7 @@ CREATE TABLE IF NOT EXISTS animales_habitat (
 CREATE TABLE IF NOT EXISTS venta (
     id_venta INT AUTO_INCREMENT PRIMARY KEY,
     id_empleado INT NOT NULL,
-    fecha DATE NOT NULL,
+    fecha DATE,
     total DECIMAL (10,2) NOT NULL,
     FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado)
 );
