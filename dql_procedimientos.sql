@@ -174,10 +174,12 @@ DELIMITER ;
 -- 17. Registrar un animal y devolver su ID
 
 DELIMITER //
-CREATE PROCEDURE registrar_animal_y_devolver_id(IN id_especie_E INT, IN peso_E DECIMAL(10,2),IN altura_E, DECIMAL(10,2),  IN estado_E VARCHAR(50), OUT nuevo_id INT)  valor_unitario_E, estado_E) 
+CREATE PROCEDURE registrar_animal_y_devolver_id(IN id_especie_E INT, IN peso_E DECIMAL(10,2),IN altura_E, DECIMAL(10,2),  IN estado_E VARCHAR(50), OUT nuevo_id INT)  valor_unitario_E,
 BEGIN
     INSERT INTO animal (id_especie_E, peso_E, altura_E, valor_unitario_E, estado_E) 
     VALUES (id_especie_E, peso_E, altura_E, valor_unitario_E, estado_E);
     SET nuevo_id = LAST_INSERT_ID();
 END//
 DELIMITER ;
+
+
