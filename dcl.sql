@@ -54,9 +54,9 @@ GRANT SELECT
 ON la_huerta_encantadaDB.productos TO 'ventas'@'localhost';
 GRANT SELECT, INSERT, UPDATE, DELETE 
 ON la_huerta_encantadaDB.tipo_cliente TO 'ventas'@'localhost' ;
-GRANT SELECT 
+GRANT SELECT, INSERT, UPDATE, DELETE 
 ON la_huerta_encantadaDB.cliente_venta TO 'ventas'@'localhost';
-GRANT SELECT 
+GRANT SELECT, INSERT, UPDATE, DELETE 
 ON la_huerta_encantadaDB.productos_venta TO 'ventas'@'localhost';
 
 -- 5. Gestor de operaciones ganaderas 
