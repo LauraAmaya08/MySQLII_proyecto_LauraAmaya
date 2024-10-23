@@ -9,14 +9,15 @@ Este proyecto tiene como objetivo diseñar y desarrollar una base de datos integ
 
 ## Tabla de Contenidos
 - [Identificación del Problema](#problema)
-- [Entidad-Relación](#entidad-relación)
-- [Diagrama Lógico](#diagrama)
+- [Requisitos del Sistema: ](#requisitos)
 - [Instalación](#instalación)
+- [Diagrama Lógico](#diagrama)
 - [Consultas](#consultas)
 - [Eventos Programados](#eventos)
 - [Triggers](#triggers)
 - [Funciones](#funciones)
 - [Procedimientos Almacenados](#procedimientos)
+- [Usuarios](#usuarios )
 - [Contacto](#contacto)
 
 
@@ -29,10 +30,6 @@ La falta de un sistema centralizado para gestionar las diversas áreas de produc
 
 ## Entidad-Relación
 
-A continuación encontrarás la expliación de las entidades y relaciones:
-
-
-## Entidades y Atributos
 
 ### 1. **Categoría**
    - **Descripción**: Clasifica las funciones de los empleados.

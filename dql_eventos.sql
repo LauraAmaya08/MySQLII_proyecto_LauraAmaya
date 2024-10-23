@@ -1,1 +1,0 @@
--- 1. eliminar cada mes ciudades que no tnegan ningun cliente o proveedor
