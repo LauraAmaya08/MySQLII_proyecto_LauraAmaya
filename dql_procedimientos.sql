@@ -161,7 +161,7 @@ BEGIN
 END//
 DELIMITER ;
 
--- 16. Listar animales por habitat
+-- 16. Listar animales por habitat.
 
 DELIMITER //
 CREATE PROCEDURE listar_animales_habitat(IN IDhabitat INT)
@@ -171,15 +171,55 @@ END//
 DELIMITER ;
 
 
--- 17. Registrar un animal y devolver su ID
+-- 17. Registrar un animal y devolver su ID.
 
 DELIMITER //
-CREATE PROCEDURE registrar_animal_y_devolver_id(IN id_especie_E INT, IN peso_E DECIMAL(10,2),IN altura_E, DECIMAL(10,2),  IN estado_E VARCHAR(50), OUT nuevo_id INT)  valor_unitario_E,
+CREATE PROCEDURE registrar_animal_y_devolver_id(IN id_especie_E INT, IN peso_E DECIMAL(10,2),IN altura_E DECIMAL(10,2), IN valor_unitario_E DECIMAL(10,2), IN estado_E VARCHAR(50), OUT nuevo_id INT) 
 BEGIN
-    INSERT INTO animal (id_especie_E, peso_E, altura_E, valor_unitario_E, estado_E) 
+    INSERT INTO animal (id_especie, peso, altura, valor_unitario, estado)
     VALUES (id_especie_E, peso_E, altura_E, valor_unitario_E, estado_E);
     SET nuevo_id = LAST_INSERT_ID();
 END//
 DELIMITER ;
 
 
+--  18. Registrar un nuevo animal con su habitat.
+
+DELIMITER //
+CREATE PROCEDURE registrar_animal_habitat(IN id_especie_E INT, IN id_habitat_E INT, IN peso_E DECIMAL(10,2), IN altura_E DECIMAL(10,2), IN valor_unitario_E DECIMAL(10,2), IN estado_E VARCHAR(50), IN fecha_E DATE)
+BEGIN
+    DECLARE nuevo_id INT;
+    INSERT INTO animal (id_especie, peso, altura, valor_unitario, estado)
+    VALUES (id_especie_E, peso_E, altura_E, valor_unitario_E, estado_E);
+    SET nuevo_id = LAST_INSERT_ID();
+    INSERT INTO animales_habitat (id_animal, id_habitat, fecha)
+    VALUES (nuevo_id, id_habitat_E, fecha_E);
+END//
+DELIMITER ;DELIMITER ;
+
+
+--  19. Eliminar un insumo de todos los registros.
+
+DELIMITER //
+CREATE PROCEDURE eliminar_insumo(IN IDinsumo INT)
+BEGIN
+    DELETE FROM insumos_orden WHERE id_insumo = IDinsumo;
+    DELETE FROM insumos_producto WHERE id_insumo = IDinsumo;
+    DELETE FROM insumos WHERE id_insumo = IDinsumo;
+END//
+DELIMITER ;
+
+
+--  20. Obtener los insumos que provienen de un proveedor.
+
+DELIMITER //
+CREATE PROCEDURE insumos_por_proveedor(IN IDproveedor INT)
+BEGIN
+    SELECT i.*
+    FROM insumos i
+    JOIN insumos_orden io ON i.id_insumo = io.id_insumo
+    JOIN orden o ON o.id_orden = io.id_orden
+    JOIN proveedor prod ON o.id_proveedor = prod.id_proveedor
+    WHERE prod.id_proveedor = IDproveedor;
+END//
+DELIMITER ;
