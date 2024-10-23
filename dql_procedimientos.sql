@@ -1,6 +1,6 @@
 -- Procedimientos Almacenados
 
--- 1. Listar funciones de un empleado.
+-- 1. 
 
 DELIMITER //
 CREATE PROCEDURE funciones_empleado(IN IDempleado INT)
@@ -195,7 +195,7 @@ BEGIN
     INSERT INTO animales_habitat (id_animal, id_habitat, fecha)
     VALUES (nuevo_id, id_habitat_E, fecha_E);
 END//
-DELIMITER ;DELIMITER ;
+DELIMITER ;
 
 
 --  19. Eliminar un insumo de todos los registros.
