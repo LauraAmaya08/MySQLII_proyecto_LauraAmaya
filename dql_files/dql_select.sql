@@ -253,26 +253,81 @@ set SQL_SAFE_UPDATES = 0;
         GROUP BY p.id_proveedor
         HAVING COUNT(o.id_orden) > 5;
 
--- 		32. Obtener el nombre de los empleados y la cantidad de capacitaciones que han recibido en el último año.
+--        32. Obtener el nombre de los empleados y la cantidad de capacitaciones que han recibido en el último año.
 
--- 		33. Obtener todos los animales que han sido tratados más de 3 veces en el último año.
+        SELECT e.id_empleado, e.nombre, e.direccion, COUNT(c.id_capacitacion) AS cantidad_capacitaciones
+        FROM empleado e 
+        JOIN empleado_capacitaciones ec ON e.id_empleado = ec.id_empleado 
+        JOIN capacitaciones c ON ec.id_capacitacion = c.id_capacitacion 
+        WHERE c.fecha_realizacion BETWEEN NOW() - INTERVAL 1 YEAR AND NOW() 
+        GROUP BY e.id_empleado, e.nombre;
 
--- 		34. Calcular el total de ingresos generados por las ventas realizadas en el último trimestre.
+--         33. Obtener todos los animales que han sido tratados más de 3 veces en el último año. //La consulta funciona pero en la base de datos no hay ningun animal que haya sido tratado mas de 3 veces en el ultimo año
 
--- 		35. Obtener el promedio de cantidad de productos vendidos por cada cliente en el último semestre.
+        SELECT a.*, COUNT(at.id) AS cantidad_tratamientos 
+        FROM animal a 
+        JOIN animales_tratados at ON a.id_animal = at.id_animal 
+        WHERE at.fecha BETWEEN NOW() - INTERVAL 1 YEAR AND NOW() 
+        GROUP BY a.id_animal 
+        HAVING COUNT(at.id) > 3;
 
--- 		36. Calcular el promedio de valor unitario de los animales asignados a un hábitat específico.
+--         34. Calcular el total de ingresos generados por las ventas realizadas en el último trimestre.
 
--- 		37. Mostrar la cantidad total de insumos utilizados en cada producto.
+        SELECT SUM(total) as total_ingresos 
+        FROM venta 
+        WHERE fecha BETWEEN NOW() - INTERVAL 3 MONTH AND NOW();
 
--- 		38. Obtener el promedio de horas trabajadas por empleado en la última semana.
+--         35. Obtener el promedio de cantidad de productos vendidos por cada cliente en el último semestre.
 
--- 		39. Mostrar el empleado con el menor y mayor salario.
+        SELECT c.id_cliente, c.nombre as nombre_cliente, AVG(cantidad_productos) AS promedio_productos_vendidos
+        FROM (
+            SELECT cv.id_cliente, SUM(pv.cantidad) AS cantidad_productos
+            FROM productos_venta pv
+            JOIN cliente_venta cv ON pv.id_venta = cv.id_venta
+            JOIN venta v ON cv.id_venta = v.id_venta
+            WHERE v.fecha BETWEEN NOW() - INTERVAL 6 MONTH AND NOW()
+            GROUP BY cv.id_cliente
+        ) AS subconsulta
+        JOIN cliente c ON subconsulta.id_cliente = c.id_cliente
+        GROUP BY c.id_cliente;
+
+--         36. Calcular el promedio de valor unitario de los animales asignados a un hábitat específico.
+
+        SELECT h.nombre as nombre_habitat, AVG(a.valor_unitario) as promedio_valor_unitario 
+        FROM animal a 
+        JOIN animales_habitat ah ON a.id_animal = ah.id_animal 
+        JOIN habitat h ON ah.id_habitat = h.id_habitat 
+        WHERE h.nombre = 'Granja de Cabras';
+
+--         37. Mostrar la cantidad total de insumos utilizados en cada producto.
+
+        SELECT p.nombre, COUNT(ip.id_insumo) as cantidad_insumos 
+        FROM producto p 
+        JOIN insumos_producto ip ON p.id_producto = ip.id_producto 
+        GROUP BY p.id_producto;
+
+--         38. Obtener el promedio de horas trabajadas por empleado en la última semana.
+
+        SELECT e.nombre, AVG(TIMEDIFF(h.hora_fin, h.hora_inicio)) AS promedio_horas_trabajadas
+        FROM empleado e
+        JOIN empleado_horarios he ON e.id_empleado = he.id_empleado
+        JOIN horarios h ON h.id_horario = h.id_horario
+        WHERE NOW() - INTERVAL 1 WEEK AND NOW()
+        GROUP BY e.nombre;
+
+-- 		39. Mostrar la cantidad de empleados con el salario menor al promedio.
+		
+        SELECT count(id_empleado)
+        FROM empleado e
+		WHERE e.salario > (SELECT AVG(e.salario) FROM empleado e)
+        ;
 
 -- 		40. Contar cuántos productos hay en cada categoría.
 
-
--- 4. Consultas con Subconsultas
+        SELECT tp.nombre, count(id_producto) as Cantidad
+        FROM producto p 
+        JOIN tipo_producto tp on tp.id_tipo = p.id_tipo 
+        GROUP BY tp.nombre;
 
 --      41. Listar los productos que tienen un precio mayor al promedio de todos los productos.
 
@@ -306,7 +361,14 @@ set SQL_SAFE_UPDATES = 0;
 
 --      44. Mostrar los hábitats que albergan más animales que el promedio.
 
-		
+		SELECT h.*
+        FROM habitat h
+        JOIN animales_habitat ah ON ah.id_habitat = h.id_habitat
+        GROUP BY h.id_habitat
+        HAVING COUNT(ah.id_animal) > (SELECT AVG(animales)
+                               FROM (SELECT COUNT(id_animal) AS animales
+                                     FROM animales_habitat
+                                     GROUP BY id_habitat) as subconsulta);
 
 --      45. Obtener los clientes que han realizado más compras que el promedio.
 		SELECT c.id_cliente, c.nombre, COUNT(*) AS cantidad_compras 
@@ -324,26 +386,136 @@ set SQL_SAFE_UPDATES = 0;
         
 --      46. Listar los productos cuyo precio es superior al precio promedio de los productos en la misma categoría.
 
+		SELECT p.nombre, p.precio_unitario
+		FROM producto p
+		WHERE p.precio_unitario > (
+			SELECT AVG(p2.precio_unitario)
+			FROM producto p2
+			WHERE p2.id_tipo = p.id_tipo
+		);
+
 --      47. Mostrar los proveedores que han suministrado insumos cuyo precio unitario es mayor que el promedio de todos los insumos.
+
+		SELECT p.nombre, i.Precio_unitario
+		FROM proveedor p
+        JOIN orden o ON p.id_proveedor = o.id_proveedor
+		JOIN insumos_orden io ON o.id_orden = io.id_orden
+		JOIN insumos i ON io.id_insumo = i.id_insumo
+		WHERE i.Precio_unitario > (
+			SELECT AVG(i2.Precio_unitario)
+			FROM insumos i2
+		);
 
 -- 		48. Listar los terrenos cuyo tamaño es mayor que el tamaño promedio de todos los terrenos.
 
+		SELECT t.id_terreno, t.area
+		FROM terreno t
+		WHERE t.area > (
+			SELECT AVG(t2.area)
+			FROM terreno t2
+		);
+
 -- 		49. Obtener los empleados que han recibido más capacitaciones que el promedio de todos los empleados.
+
+		SELECT e.nombre, COUNT(ec.id_capacitacion) AS total_capacitaciones
+		FROM empleado e
+		JOIN empleado_capacitaciones ec ON e.id_empleado = ec.id_empleado
+		GROUP BY e.nombre
+		HAVING COUNT(ec.id_capacitacion) > (
+			SELECT AVG(total)
+			FROM (
+				SELECT COUNT(ec2.id_capacitacion) AS total
+				FROM empleado_capacitaciones ec2
+				GROUP BY ec2.id_empleado
+			) AS subconsulta
+		);
 
 -- 		50. Mostrar los productos que han sido vendidos más veces que el promedio de todas las ventas.
 
+		SELECT p.nombre, COUNT(pv.id_producto) AS veces_vendido
+		FROM producto p
+		JOIN productos_venta pv ON p.id_producto = pv.id_producto
+		GROUP BY p.nombre
+		HAVING COUNT(pv.id_producto) > (
+			SELECT AVG(cantidad)
+			FROM (
+				SELECT COUNT(pv2.id_producto) AS cantidad
+				FROM productos_venta pv2
+				GROUP BY pv2.id_producto
+			) AS subconsulta
+		);
+
 -- 		51. Listar los hábitats que tienen más animales que el promedio de todos los hábitats.
+
+		SELECT h.nombre, COUNT(ah.id_animal) AS total_animales
+		FROM habitat h
+		JOIN animales_habitat ah ON h.id_habitat = ah.id_habitat
+		GROUP BY h.nombre
+		HAVING COUNT(ah.id_animal) > (
+			SELECT AVG(total)
+			FROM (
+				SELECT COUNT(ah2.id_animal) AS total
+				FROM animales_habitat ah2
+				GROUP BY ah2.id_habitat
+			) AS subconsulta
+		);
 
 -- 		52. Obtener el nombre y el total de ventas de los productos cuyo precio es superior al promedio de la categoría.
 
+		SELECT p.nombre, COUNT(v.id_venta) AS total_ventas
+		FROM producto p
+		JOIN productos_venta pv ON p.id_producto = pv.id_producto
+		JOIN venta v ON pv.id_venta = v.id_venta
+		WHERE p.precio_unitario > (
+			SELECT AVG(p2.precio_unitario)
+			FROM producto p2
+			WHERE p2.id_tipo = p.id_tipo
+		)
+		GROUP BY p.nombre;
+
 -- 		53. Mostrar los terrenos que tienen más animales de lo que el promedio en otros terrenos.
 
+		
 --  	54. Mostrar los terrenos donde se han cultivado más tipos de cultivos que el promedio en los demás terrenos.
+
+		SELECT t.*, COUNT(DISTINCT c.id_cultivo) AS total_cultivos
+		FROM terreno t
+		JOIN cultivos_terreno ct ON t.id_terreno = ct.id_terreno
+		JOIN cultivo c ON ct.id_cultivo = c.id_cultivo
+		GROUP BY t.id_terreno
+		HAVING COUNT(DISTINCT c.id_cultivo) > (
+			SELECT AVG(total)
+			FROM (
+				SELECT COUNT(c2.id_cultivo) AS total
+				FROM cultivos_terreno ct2
+				JOIN cultivo c2 ON ct2.id_cultivo = c2.id_cultivo
+				GROUP BY ct2.id_terreno
+			) AS subconsulta
+		);
 
 -- 		55. Obtener el promedio del total de ventas por cliente en el último año, y listar aquellos clientes cuyo total de ventas esté por encima de este promedio.
 
+		SELECT c.nombre, SUM(v.total) AS total_ventas
+		FROM cliente c
+		JOIN cliente_venta cv ON c.id_cliente = cv.id_cliente
+		JOIN venta v ON cv.id_venta = v.id_venta
+		WHERE v.fecha BETWEEN NOW() - INTERVAL 1 YEAR AND NOW()
+		GROUP BY c.nombre
+		HAVING SUM(v.total) > (
+			SELECT AVG(total)
+			FROM (
+				SELECT SUM(v2.total) AS total
+				FROM cliente_venta cv2
+				JOIN venta v2 ON cv2.id_venta = v2.id_venta
+				WHERE v2.fecha BETWEEN NOW() - INTERVAL 1 YEAR AND NOW()
+				GROUP BY cv2.id_cliente
+			) AS subconsulta
+		);
+        
 
--- 5. Consultas con Filtros Avanzados
+--      56. Mostrar las ventas realizadas entre dos fechas específicas.
+
+		SELECT * FROM venta WHERE fecha BETWEEN '2024-5-12' AND '2025-09-12';
 
 --      56. Mostrar las ventas realizadas entre dos fechas específicas.
 
@@ -387,37 +559,124 @@ set SQL_SAFE_UPDATES = 0;
         FROM orden 
         WHERE total > 200;
         
--- 		61. Mostrar los empleados que trabajan en el departamento de recursos humanos.
+-- 		61. Mostrar los empleados que trabajan en una función especifica.
+		SELECT e.*
+        FROM empleado_funciones ef
+        JOIN empleado e
+        ON e.id_empleado = ef.id_empleado
+        WHERE id_funcion = 3;
 
 -- 		62. Listar todos los terrenos cuyo tamaño es mayor a 500 metros cuadrados.
 
+		SELECT *
+        FROM terreno
+        WHERE area > 500;
+
 -- 		63. Mostrar todas las órdenes de compra procesadas en los últimos 3 meses.
+        SELECT *
+        FROM orden
+        WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH);
 
 -- 		64. Listar todos los animales que pesan más de 50 kg.
+		SELECT a.*
+        FROM animal a
+        WHERE peso > 50;
 
--- 		65. Listar todos los clientes que viven en una ciudad cuyo nombre empieza con la letra 'S'.
+-- 		65. Listar todos los clientes que viven en una ciudad cuyo nombre empieza con la letra 'C'.
+		SELECT c.* 
+        FROM cliente c 
+        JOIN ciudad ci
+        ON c.id_ciudad = ci.id_ciudad
+        WHERE ci.nombre LIKE 'C%';
 
 -- 		66. Mostrar todos los productos que tienen un precio inferior a $5.
+		SELECT p.* 
+        FROM producto p
+        WHERE p.precio_unitario < 5;
 
 -- 		67. Listar los clientes que han realizado compras cuyo total es superior a $500 en el último año.
 
+		SELECT c.nombre, v.total
+		FROM cliente c
+		JOIN cliente_venta cv ON c.id_cliente = cv.id_cliente
+		JOIN venta v ON cv.id_venta = v.id_venta
+		WHERE v.total > 500 AND v.fecha BETWEEN NOW() - INTERVAL 1 YEAR AND NOW();
+
 -- 		68. Mostrar todos los productos que fueron vendidos en las ventas superiores a $1000.
 
--- 		69. Obtener todos los proveedores cuyos productos hayan sido comprados en más de 5 órdenes en los últimos 2 años.
+		SELECT p.nombre, pv.cantidad
+		FROM producto p
+		JOIN productos_venta pv ON p.id_producto = pv.id_producto
+		JOIN venta v ON pv.id_venta = v.id_venta
+		WHERE v.total > 1000;
+
+-- 		69. Obtener todos los proveedores cuyos productos hayan sido comprados en más de 3 órdenes en los últimos 2 años.
+
+		SELECT p.nombre, COUNT(o.id_orden) AS total_ordenes
+		FROM proveedor p
+		JOIN orden o ON p.id_proveedor = o.id_proveedor
+		WHERE o.fecha BETWEEN NOW() - INTERVAL 2 YEAR AND NOW()
+		GROUP BY p.nombre
+		HAVING COUNT(o.id_orden) > 3;
 
 -- 		70. Listar los empleados que han trabajado más de 200 horas en el último mes.
 
--- 		71. Mostrar los animales que han recibido tratamientos cuyo costo total es superior a $300.
+		SELECT e.nombre, SUM(TIMEDIFF(h.hora_fin, h.hora_inicio)) AS total_horas
+		FROM empleado e
+		JOIN empleado_horarios eh ON e.id_empleado = eh.id_empleado
+        JOIN horarios h ON eh.id_horario = h.id_horario
+		WHERE NOW() - INTERVAL 1 MONTH AND NOW()
+		GROUP BY e.nombre
+		HAVING SUM(TIMEDIFF(h.hora_fin, h.hora_inicio))  > 200;
+
+-- 		71. Mostrar los animales que han recibido tratamientos cuyo costo total es superior a $100.
+
+		SELECT a.*, SUM(at.valor_tratamiento) AS total_costo
+		FROM animal a
+		JOIN animales_tratados at ON a.id_animal = at.id_animal
+		WHERE at.valor_tratamiento > 100
+		GROUP BY a.id_animal;
 
 -- 		72. Obtener los empleados que no han realizado ventas en los últimos 6 meses.
 
+		SELECT e.*
+		FROM empleado e
+		LEFT JOIN venta v ON e.id_empleado = v.id_empleado AND v.fecha BETWEEN NOW() - INTERVAL 6 MONTH AND NOW()
+		WHERE v.id_venta IS NULL;
+
 -- 		73. Mostrar los clientes que han comprado productos de al menos 3 categorías diferentes.
+
+		SELECT c.nombre, COUNT(DISTINCT p.id_tipo) AS total_categorias
+		FROM cliente c
+		JOIN cliente_venta cv ON c.id_cliente = cv.id_cliente
+		JOIN productos_venta pv ON cv.id_venta = pv.id_venta
+		JOIN producto p ON pv.id_producto = p.id_producto
+		GROUP BY c.nombre
+		HAVING COUNT(DISTINCT p.id_tipo) >= 3;
 
 -- 		74. Listar los clientes que han realizado compras por un monto total superior a $1,000 en los últimos tres meses.
 
--- 		75. Listar los empleados que han trabajado más de 8 horas en al menos un día durante la última semana.
+		SELECT c.nombre, SUM(v.total) AS total_compras
+		FROM cliente c
+		JOIN cliente_venta cv ON c.id_cliente = cv.id_cliente
+		JOIN venta v ON cv.id_venta = v.id_venta
+		WHERE v.fecha BETWEEN NOW() - INTERVAL 3 MONTH AND NOW()
+		GROUP BY c.nombre
+		HAVING SUM(v.total) > 1000;
 
--- 6. Consultas de Actualización (UPDATE)
+-- 		75. Obtener la categoria con más empleados.
+        SELECT c.*
+        FROM categoria c
+        JOIN funciones f ON f.id_categoria = c.id_categoria
+        JOIN empleado_funciones ef ON ef.id_funcion = f.id_funcion
+        GROUP BY c.id_categoria
+        HAVING COUNT(ef.id_empleado) = (
+            SELECT MAX(empleados)
+            FROM (SELECT COUNT(efsub.id_empleado) AS empleados
+                  FROM funciones fsub
+                  JOIN empleado_funciones efsub ON efsub.id_funcion = fsub.id_funcion
+                  GROUP BY fsub.id_categoria) AS subconsulta
+);
 
 --      76. Actualizar el precio de todos los productos en un 10%.
 		UPDATE producto
@@ -430,15 +689,32 @@ set SQL_SAFE_UPDATES = 0;
 
 --      78. Actualizar la cantidad en inventario de un insumo específico después de una compra.
 
---      79. Modificar los datos de contacto de un proveedor.
 
---      80. Actualizar el estado de un terreno que ha sido reasignado para nuevos cultivos.
+--      79. Modificar los datos de contacto de un proveedor. //Cambia datos
+        UPDATE proveedor
+        SET telefono = '111111',  
+        WHERE id_proveedor = 1; 
+
+
+--      80. Actualizar el estado de un terreno que ha sido reasignado para nuevos cultivos. //Cambia datos
+		UPDATE terreno
+        SET estado = 'Ocupado'  
+        WHERE id_terreno = 5;  
 
 --      81. Modificar el salario de todos los empleados en un 5%.
+		UPDATE empleado
+        SET salario = salario + (salario * 0.05);
 
---      82. Actualizar el estado de una orden de compra después de su entrega.
+--      82. Actualizar el estado de todas las ordenes de compra. //Cambia datos
 
---      83. Cambiar el hábitat de un animal que ha sido reasignado.
+        UPDATE cliente_venta
+        SET estado = 'Entregado'
+        WHERE estado = 'En Proceso'; 
+
+--      83. Cambiar el hábitat de un animal que ha sido reasignado. //Cambia datos
+        UPDATE animales_habitat ah 
+        SET id_habitat = 2
+        WHERE id_animal = 2
 
 --      84. Actualizar la cantidad de productos en stock después de una venta.
 
