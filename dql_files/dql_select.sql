@@ -473,9 +473,7 @@ set SQL_SAFE_UPDATES = 0;
 		)
 		GROUP BY p.nombre;
 
--- 		53. Mostrar los terrenos que tienen más animales de lo que el promedio en otros terrenos.
 
-		
 --  	54. Mostrar los terrenos donde se han cultivado más tipos de cultivos que el promedio en los demás terrenos.
 
 		SELECT t.*, COUNT(DISTINCT c.id_cultivo) AS total_cultivos
@@ -716,21 +714,100 @@ set SQL_SAFE_UPDATES = 0;
         SET id_habitat = 2
         WHERE id_animal = 2
 
---      84. Actualizar la cantidad de productos en stock después de una venta.
-
---      85. Modificar el estado de una capacitación completada por un empleado.
+--      84. Actualizar la cantidad de productos en stock. //Cambia datos
+        UPDATE producto
+        SET stock = stock - 8
+        WHERE id_producto = 1;
 
 --      86. Eliminar los productos que han vencido.
+        DELETE FROM productos
+        WHERE fecha_vencimiento < CURDATE();
 
 --      87. Borrar los registros de ventas de hace más de dos años.
-
---      88. Eliminar los animales que han sido dados de baja.
+        DELETE FROM venta
+        WHERE fecha < DATE_SUB(CURDATE(), INTERVAL 2 YEAR);
 
 --      89. Borrar los clientes que no han realizado compras en los últimos cinco años.
+        DELETE FROM cliente
+        WHERE id_cliente NOT IN (
+        SELECT id_cliente FROM cliente_venta cv
+        JOIN venta v ON v.id_venta = cv.id_venta 
+        WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 5 YEAR)
+        );
 
 --      90. Eliminar los proveedores que no han suministrado insumos en más de un año.
+        DELETE FROM proveedor
+        WHERE id_proveedor NOT IN (
+        SELECT id_proveedor FROM orden
+        WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+        );
 
 --      91. Borrar las órdenes de compra que ya han sido completadas hace más de un año.
 
---      92. Eliminar los empleados que han dejado la empresa.
-		
+        DELETE FROM orden
+        WHERE estado = 'Completado'
+        AND fecha < DATE_SUB(CURDATE(), INTERVAL 1 YEAR);
+
+--      92. Eliminar las fucniones relacionadas empleados que han dejado la empresa.
+        DELETE FROM empleado_funciones 
+        WHERE id_empleado IN 
+        (SELECT id_empleado FROM empleado WHERE estado = 'Inactivo');
+
+--      93. Mostrar las tecnologías que se están utilizando actualmente en los cultivos.
+
+        SELECT DISTINCT(t.nombre)
+        FROM tecnologias t
+        JOIN tecnologias_terreno tt ON t.id_tecnologia = tt.id_tecnologia
+        WHERE t.es_usado = 1;
+
+--      94. Listar todas las funciones asignadas a un empleado específico.
+
+        SELECT f.nombre
+        FROM funciones f
+        JOIN empleado_funciones ef ON f.id_funcion = ef.id_funcion
+        JOIN empleado e ON ef.id_empleado = e.id_empleado
+        WHERE e.id_empleado = 5;
+
+--      95. Listar todos los mantenimientos realizados en los últimos seis meses.
+
+        SELECT * 
+        FROM mantenimiento m
+        JOIN mantenimiento_tecnologia mt ON m.id_mantenimiento = mt.id_mantenimiento
+        WHERE mt.fecha_realizacion BETWEEN NOW() - INTERVAL 6 MONTH AND NOW();
+
+--      96. Listar todos los empleados y sus funciones asignadas.
+
+        SELECT e.nombre AS empleado, f.nombre 
+        FROM empleado e
+        JOIN empleado_funciones ef ON e.id_empleado = ef.id_empleado
+        JOIN funciones f ON ef.id_funcion = f.id_funcion;
+
+--      97. Mostrar el mantenimiento más reciente realizado.
+
+        SELECT * 
+        FROM mantenimiento m
+        JOIN mantenimiento_tecnologia mt ON m.id_mantenimiento = mt.id_mantenimiento
+        ORDER BY mt.fecha_realizacion DESC 
+        LIMIT 1;
+
+--      98. Mostrar los cultivos que deben ser recogidos en los próximos tres meses.
+
+        SELECT c.nombre, c.estado, c.cantidad, ct.fecha_siembra, ct.fecha_recoger 
+        FROM cultivo c
+        JOIN cultivos_terreno ct ON c.id_cultivo = ct.id_cultivo
+        WHERE ct.fecha_recoger BETWEEN NOW() AND NOW() + INTERVAL 3 MONTH;
+
+--      99. Mostrar el terreno donde está plantado un cultivo específico.
+
+        SELECT t.*, c.nombre AS cultivo, ct.fecha_siembra 
+        FROM terreno t
+        JOIN cultivos_terreno ct ON t.id_terreno = ct.id_terreno
+        JOIN cultivo c ON ct.id_cultivo = c.id_cultivo
+        WHERE c.id_cultivo = 4;
+
+--   100. Listar todos los cultivos y su estado en cada terreno.
+
+        SELECT c.nombre AS cultivo, t.estado 
+        FROM cultivo c
+        JOIN cultivos_terreno ct ON c.id_cultivo = ct.id_cultivo
+        JOIN terreno t ON ct.id_terreno = t.id_terreno;
