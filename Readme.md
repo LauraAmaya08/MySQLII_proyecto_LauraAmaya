@@ -433,7 +433,175 @@ Este proyecto utiliza MySQL y MySQL Workbench para la gestión de datos y proced
 
 ## Consultas
 
+### 1. Consultar proveedores que suministran insumos esenciales. 
+ Esta consulta retorna la informacion de los proveedores que suministran insumos escenciales para la fabricación de productos.
+
+```sql
+SELECT p.* 
+FROM insumos_producto ip 
+JOIN insumos i ON ip.id_insumo = i.id_insumo 
+JOIN insumos_orden io ON i.id_insumo = io.id_insumo 
+JOIN orden o ON io.id_orden = o.id_orden 
+JOIN proveedor p ON o.id_proveedor = p.id_proveedor 
+WHERE ip.es_Escencial = 1;
+```
+
+### 2. Consultar las compras junto con los productos y proveedores. 
+ Esta consulta retorna la informacion de las compras realizadas junto con sus respectivos productos y proveedores de los mismos.
+
+```sql
+SELECT v.total as total_venta, v.fecha as fecha_venta, 
+pv.cantidad as cantidad_producto, p.nombre as nombre_producto, 
+p.descripcion as descripcion_producto, p.peso as peso_producto, 
+pr.nombre as nombre_proveedor, pr.telefono as telefono_proveedor, 
+pr.direccion as direccion_proveedor, pr.estado as estado_proveedor 
+FROM venta v 
+JOIN cliente_venta cv ON v.id_venta = cv.id_venta 
+JOIN productos_venta pv ON cv.id_venta = pv.id_venta 
+JOIN producto p ON pv.id_producto = p.id_producto 
+JOIN insumos_producto ip ON p.id_producto = ip.id_producto 
+JOIN insumos i ON ip.id_insumo = i.id_insumo 
+JOIN insumos_orden io ON i.id_insumo = io.id_insumo 
+JOIN orden o ON io.id_orden = o.id_orden 
+JOIN proveedor pr ON o.id_proveedor = pr.id_proveedor;
+```
+
+### 3. Consultar la cantidad de animales por hábitat. 
+ Esta consulta retorna el nombre del habitat y la cantidad de animales que se encuentran en el mismo.
+
+```sql
+SELECT h.id_habitat, h.nombre, COUNT(ah.id_animal) AS cantidad_animales 
+FROM animales_habitat ah 
+JOIN habitat h ON ah.id_habitat = h.id_habitat 
+GROUP BY ah.id_habitat;
+```
+
+### 4. Consultar promedio de productos vendidos por cliente en el último semestre. 
+ Esta consulta retorna el nombre del cliente que ha realizado compras y el promedio de los productos que ha adquirido.
+
+```sql
+SELECT c.id_cliente, c.nombre as nombre_cliente, 
+AVG(cantidad_productos) AS promedio_productos_vendidos
+FROM (
+    SELECT cv.id_cliente, SUM(pv.cantidad) AS cantidad_productos
+    FROM productos_venta pv
+    JOIN cliente_venta cv ON pv.id_venta = cv.id_venta
+    JOIN venta v ON cv.id_venta = v.id_venta
+    WHERE v.fecha BETWEEN NOW() - INTERVAL 6 MONTH AND NOW()
+    GROUP BY cv.id_cliente
+) AS subconsulta
+JOIN cliente c ON subconsulta.id_cliente = c.id_cliente
+GROUP BY c.id_cliente;
+```
+
+### 5. Consultar empleados con más capacitaciones que el promedio. 
+ Esta consulta retorna el nombre del empleado y la cantidad de capacitaciones que ha recibido.
+
+```sql
+SELECT e.nombre, COUNT(ec.id_capacitacion) AS total_capacitaciones
+FROM empleado e
+JOIN empleado_capacitaciones ec ON e.id_empleado = ec.id_empleado
+GROUP BY e.nombre
+HAVING COUNT(ec.id_capacitacion) > (
+    SELECT AVG(total)
+    FROM (
+        SELECT COUNT(ec2.id_capacitacion) AS total
+        FROM empleado_capacitaciones ec2
+        GROUP BY ec2.id_empleado
+    ) AS subquery
+);
+```
+
+### 6. Consultar terrenos con más tipos de cultivos que el promedio. 
+ Esta consulta retorna la información del terreno y la cantidad de diferentes tipos de cultivos cultivados en el, de los terrenos que tienen mas tipos que el promedio.
+
+```sql
+SELECT t.*, COUNT(DISTINCT c.id_cultivo) AS total_cultivos
+FROM terreno t
+JOIN cultivos_terreno ct ON t.id_terreno = ct.id_terreno
+JOIN cultivo c ON ct.id_cultivo = c.id_cultivo
+GROUP BY t.id_terreno
+HAVING COUNT(DISTINCT c.id_cultivo) > (
+    SELECT AVG(total)
+    FROM (
+        SELECT COUNT(c2.id_cultivo) AS total
+        FROM cultivos_terreno ct2
+        JOIN cultivo c2 ON ct2.id_cultivo = c2.id_cultivo
+        GROUP BY ct2.id_terreno
+    ) AS subquery
+);
+```
+
+### 7. Consultar proveedores cuyos productos hayan sido comprados en más de 3 órdenes en los últimos 2 años. 
+ Esta consulta retorna el nombre del proveedor y la cantidad de veces que se le hicieron ordenes al mismo en los ultimos dos años.
+
+```sql
+SELECT p.nombre, COUNT(o.id_orden) AS total_ordenes
+FROM proveedor p
+JOIN orden o ON p.id_proveedor = o.id_proveedor
+WHERE o.fecha BETWEEN NOW() - INTERVAL 2 YEAR AND NOW()
+GROUP BY p.nombre
+HAVING COUNT(o.id_orden) > 3;
+```
+
+### 8. Consultar clientes con compras de productos de al menos 3 categorías diferentes. 
+ Esta consulta retorna el nombre del cliente y la cantidad de categorias que ha comprado si ha comprado productos de al menos 3 categorias diferentes.
+
+```sql
+SELECT c.nombre, COUNT(DISTINCT p.id_tipo) AS total_categorias
+FROM cliente c
+JOIN cliente_venta cv ON c.id_cliente = cv.id_cliente
+JOIN productos_venta pv ON cv.id_venta = pv.id_venta
+JOIN producto p ON pv.id_producto = p.id_producto
+GROUP BY c.nombre
+HAVING COUNT(DISTINCT p.id_tipo) >= 3;
+```
+
+### 9. Cambiar el hábitat de un animal que ha sido reasignado. 
+ Esta consulta update actualiza el habitat de un animal que se desea cambiar en la tabla de la relación.
+
+```sql
+UPDATE animales_habitat ah 
+SET id_habitat = 2
+WHERE id_animal = 2
+```
+
+### 10. Borrar los clientes que no han realizado compras en los últimos cinco años. 
+ Esta consulta delete elimina los clientes que no han realizado compras en los ultimos 5 años.
+
+```sql
+DELETE FROM cliente
+WHERE id_cliente NOT IN (
+SELECT id_cliente FROM cliente_venta cv
+JOIN venta v ON v.id_venta = cv.id_venta 
+WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 5 YEAR)
+);
+```
+
 ## Eventos 
+
+### 1. Informar de productos vencidos cada dia. 
+ Este evento genera un registro en la tabla alertas cuando encuentra un producto vencido.
+
+```sql
+CREATE EVENT registrar_productos_vencidos
+ON SCHEDULE EVERY 1 DAY
+DO
+  INSERT INTO alertas (mensaje, fecha)
+  SELECT CONCAT('Producto: ', nombre, ' vencido!'), CURDATE()
+  FROM producto
+  WHERE fecha_vencimiento <= CURDATE();
+```
+
+### 2. Eliminar ordenes antiguas. 
+ Este evento elimina ordenes que ya hayan cumplido un lapso de 2 años.
+
+```sql
+ON SCHEDULE EVERY 1 YEAR
+DO
+  DELETE FROM orden 
+  WHERE fecha < DATE_SUB(CURDATE(), INTERVAL 2 YEAR);
+```
 
 ## Triggers
 
